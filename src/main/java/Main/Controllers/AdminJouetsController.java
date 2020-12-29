@@ -1,13 +1,11 @@
 package Main.Controllers;
 
-import Main.DAO.SingletonConnection;
+import Main.Metier.ToyRepository;
 import Main.Model.Toy;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,23 +15,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class AdminJouetsController implements Initializable {
     @FXML
@@ -41,10 +33,10 @@ public class AdminJouetsController implements Initializable {
     @FXML
     private ComboBox prixFilter;
 
-    String choix="";
+    String choix = "";
 
     @FXML
-    private TextField nameFilter ;
+    private TextField nameFilter;
 
     @FXML
     private Pagination pagination;
@@ -56,111 +48,84 @@ public class AdminJouetsController implements Initializable {
 
 
     @FXML
-    private TableColumn<Toy,Integer> id;
+    private TableColumn<Toy, Integer> id;
     @FXML
-    private TableColumn<Toy,String> nom;
-
-    
-    @FXML
-    private TableColumn<Toy,String> type;
-
-    @FXML
-    private TableColumn<Toy,Double> prix;
+    private TableColumn<Toy, String> nom;
 
 
     @FXML
-    private TableColumn<Toy,String> fseur;
+    private TableColumn<Toy, String> type;
 
     @FXML
-    private TableColumn<Toy,Double> stock;
+    private TableColumn<Toy, Double> prix;
+
 
     @FXML
-    private TableColumn<Toy,String> pa;
+    private TableColumn<Toy, String> fseur;
 
     @FXML
-    private TableColumn<Toy,String> photo;
+    private TableColumn<Toy, Double> stock;
+
+    @FXML
+    private TableColumn<Toy, String> pa;
+
+    @FXML
+    private Button btn_afficherPhoto;
+    @FXML
+    private Button btn_addToy;
+    @FXML
+    private Button btn_updateToy;
+
+    @FXML
+    private TextField update_name;
+    @FXML
+    private TextField update_vendor;
+    @FXML
+    private TextField update_price;
+
+    @FXML
+    private TextField update_stock;
+    @FXML
+    private TextField update_picture;
+    @FXML
+    private TextField update_min;
+    @FXML
+    private TextField update_max;
+    @FXML
+    private Button PhotoUpload;
+    @FXML
+    private ComboBox<String> update_type;
+
+    @FXML
+    private TextField insert_name;
+    @FXML
+    private TextField insert_vendor;
+    @FXML
+    private TextField insert_price;
+    @FXML
+    private TextField insert_stock;
+    @FXML
+    private TextField photoProduit;
+    @FXML
+    private ComboBox<String> insert_type;
+
+@FXML
+    private Button btn_delToy ;
+    ObservableList<Toy> oblist ;
+
+    Toy t = new Toy();
+    ToyRepository toyRepository = new ToyRepository();
 
 
-
-
-    ObservableList<Toy> oblist = FXCollections.observableArrayList();
-    BufferedImage image;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
 
-        Connection connection = SingletonConnection.getConnexion();
-
-
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id ");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                oblist.add(new Toy (rs.getInt("Id"),
-                        rs.getString("Name"),rs.getInt("TypeId")
-                        ,rs.getString("PicturePath"),rs.getDouble("Price"),rs.getString("v.Name"),
-                        rs.getInt("MaxAge"),rs.getInt("MinAge"),
-                        rs.getInt("Quantity")));
-
-
-
-
-            }
-
-        } catch (SQLException  e) {
-            e.printStackTrace();
-        }
-
-
-
-        id.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        nom.setCellValueFactory(new PropertyValueFactory<>("name"));
-        type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
-        prix.setCellValueFactory(new PropertyValueFactory<>("price"));
-        fseur.setCellValueFactory(new PropertyValueFactory<>("vendor_name"));
-        stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
-        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
-
-
-
-        filteredData = new FilteredList<>(oblist, b -> true);
-
-        // 2. Set the filter Predicate whenever the filter changes.
-        nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(toy -> newValue == null || newValue.isEmpty() || toy.getName().toLowerCase()
-                    .contains(newValue.toLowerCase()));
-            changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
-        });
-        pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
-
-
-        int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
-        pagination.setPageCount(totalPage);
-        pagination.setCurrentPageIndex(0);
-        changeTableView(0, ROWS_PER_PAGE);
-        pagination.currentPageIndexProperty().addListener(
-                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
-
-
-
-//
-//        // 3. Wrap the FilteredList in a SortedList.
-//        SortedList<Toy> sortedData = new SortedList<>(filteredData);
-//
-//        // 4. Bind the SortedList comparator to the TableView comparator.
-//        // 	  Otherwise, sorting the TableView would have no effect.
-//        sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-//
-//        // 5. Add sorted (and filtered) data to the table.
-//        tableView.setItems(sortedData);
-
-
+        Afficher();
     }
 
 
-    public void PrixFilter(ActionEvent event){
+    public void PrixFilter(ActionEvent event) {
         choix = prixFilter.getValue().toString();
         System.out.println(choix);
 //stateACS is a toggle button
@@ -170,12 +135,11 @@ public class AdminJouetsController implements Initializable {
 
             //Sort in asc order
             oblist.sort(comparator);
-        }else if (choix.equals("Prix décroissant")) {
+        } else if (choix.equals("Prix décroissant")) {
             Comparator<Toy> comparator = Comparator.comparing(Toy::getPrice).reversed();
             changeTableView2(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
 
             oblist.sort(comparator);
-
 
 
         }
@@ -183,17 +147,16 @@ public class AdminJouetsController implements Initializable {
     }
 
 
-
     public void logout(ActionEvent actionEvent) throws IOException {
         ButtonType yes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"",yes,no);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", yes, no);
 
         alert.setTitle("Confimer la déconnection");
         alert.setHeaderText("Voulez vous vraimenet déconnecter ?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == yes ){
+        if (result.get() == yes) {
             Parent parent = FXMLLoader.load(getClass().getResource("/FXML/login.fxml"));
             Scene scene = new Scene(parent);
             Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -202,8 +165,8 @@ public class AdminJouetsController implements Initializable {
 
             homeStage.show();
         } else {
-            alert.close();        }
-
+            alert.close();
+        }
 
 
     }
@@ -228,6 +191,7 @@ public class AdminJouetsController implements Initializable {
         tableView.setItems(sortedData);
 
     }
+
     private void changeTableView2(int index, int limit) {
 
         int fromIndex = index * limit;
@@ -242,10 +206,343 @@ public class AdminJouetsController implements Initializable {
         tableView.setItems(oblist);
 
     }
+
+    @FXML
+    private void ShowPhoto(ActionEvent event) throws SQLException {
+
+        FXMLLoader Loader = new FXMLLoader();
+        Loader.setLocation(getClass().getResource("/FXML/PhotoProduit.fxml"));
+
+        try {
+            Loader.load();
+            Toy toy = new Toy();
+            ToyRepository toyRepository = new ToyRepository();
+            PhotoProduitController photoProduitController = Loader.getController();
+
+            toy = toyRepository.getPhotos(tableView.getSelectionModel().getSelectedItem().getPhoto());
+
+            photoProduitController.setProduit(toy);
+            Parent p = Loader.getRoot();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(p));
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+
+    @FXML
+    private void show_addForm(ActionEvent event) {
+        tab.getSelectionModel().select(1);
+        // trying.setVisible(true);
+
+    }
+
+
+
+    @FXML
+    private void show_updateForm(ActionEvent event) {
+
+        update_name.setText(tableView.getSelectionModel().getSelectedItem().getName());
+        update_vendor.setText(tableView.getSelectionModel().getSelectedItem().getVendor_name());
+        update_price.setText(Double.toString(tableView.getSelectionModel().getSelectedItem().getPrice()));
+        update_min.setText(Integer.toString(tableView.getSelectionModel().getSelectedItem().getMin_age()));
+        update_max.setText(Integer.toString(tableView.getSelectionModel().getSelectedItem().getMax_age()));
+        update_stock.setText(Double.toString(tableView.getSelectionModel().getSelectedItem().getStock()));
+        update_picture.setText(tableView.getSelectionModel().getSelectedItem().getPhoto());
+
+
+        tab.getSelectionModel().select(2);
+        //prenom.setText(utilisateur.getSelectionModel().getSelectedItem().getPrenom());
+
+        // valider.setVisible(false);
+//        btn_suppProd.setVisible(true);
+        //  modifier.setVisible(false);
+        //annuler.setVisible(false);
+        // ajouter.setVisible(true);
+    }
+    @FXML
+    private void save_Update(ActionEvent event) {
+        if (!tableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Modification d'un produit");
+            alert.setHeaderText("Etes-vous sur de vouloir modifier "
+                    + tableView.getSelectionModel().getSelectedItem().getName() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+
+                ToyRepository toyRepository = new ToyRepository();
+                Toy toy = new Toy(tableView.getSelectionModel().getSelectedItem().getId(),
+                        update_name.getText(),
+                        Integer.parseInt(update_min.getText()),
+                        update_picture.getText(),
+
+                        Double.parseDouble(update_price.getText()),
+                        update_vendor.getText(),
+
+                        Integer.parseInt(update_min.getText()),
+                        Integer.parseInt(update_max.getText()),
+                        Double.parseDouble(update_stock.getText())
+
+                        );
+
+                toyRepository.updateToy(toy);
+                System.out.println(toy);
+                System.out.println("___________a_________");
+
+                refresh();
+            }
+
+            update_name.setText("");
+            update_vendor.setText("");
+            update_price.setText("");
+            update_min.setText("");
+            update_max.setText("");
+
+            //afficher.setVisible(false);
+            tab.getSelectionModel().select(0);
+
+        }
+    }
+
+
+
+
+    @FXML
+    private void photoChooser(ActionEvent event)
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File choix = fileChooser.showOpenDialog(null);
+        if (choix != null) {
+
+            String absolutePathPhoto = choix.getAbsolutePath();
+            update_picture.setText(choix.getName());
+        } else {
+            System.out.println("Image introuvable");
+        }
+
+    }
+
+    @FXML
+    private void Enregistrer_AjoutProduit(ActionEvent event) {
+
+//
+//        copyImages.deplacerVers(photoProduit, absolutePathPhoto,"C:\\Users\\MED\\Desktop\\esprit\\3eme\\med\\src\\images");
+//        copyImages.deplacerVers(photoProduit, absolutePathPhoto,"C:\\wamp64\\www\\pidevweb\\web\\img");
+        Toy toy = new Toy() ;
+
+               toy.setName(insert_name.getText());
+        toy.setType_id(Integer.parseInt(insert_price.getText())) ;//type
+            toy.setPhoto(photoProduit.getText()) ;
+               toy.setPrice( Double.parseDouble(insert_price.getText())) ;
+
+                toy.setVendor_name(insert_vendor.getText());
+                toy.setMin_age(Integer.parseInt(insert_price.getText())) ;//minage
+        toy.setMax_age(Integer.parseInt(insert_price.getText())); //maxage
+
+        toy.setStock(Double.parseDouble(insert_stock.getText()));
+
+
+        if (insert_name.getText().equals("") || insert_price.getText().equals("") ||
+                insert_price.getText()==null || photoProduit.getText()==null || insert_vendor.getText()==null || insert_stock.getText().equals("")  ) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Alerte");
+            alert.setHeaderText("Vous devez remplir TOUT LES CHAMPS SVP");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                tab.getSelectionModel().select(1);
+                Afficher();
+                insert_name.setText("");
+                insert_price.setText("");
+                insert_vendor.setText("");
+                photoProduit.setText("");
+                insert_stock.setText("");
+
+            }
+
+        }
+
+        else {  toyRepository.addToy(toy);
+            Afficher();
+            insert_name.setText("");
+            insert_price.setText("");
+            insert_vendor.setText("");
+            photoProduit.setText("");
+            insert_stock.setText("");
+            tab.getSelectionModel().select(0);
+
+            //maillist sending mail
+            List<String> emails = toyRepository.getAllMails();
+
+            // email subject
+            String subject = "Nouvelle collection MBA && CBYTE !";
+
+            // message which is to be sent
+            String message = "La nouvelle collection est arrivée ! Découvrez-vite les nouveautés ! .\n";
+
+            // send the email to multiple recipients
+            mailingList(subject, emails, message);
+        }
+
+    }
+
+
+    @FXML
+    private void deleteToy(ActionEvent event) {
+        if (!tableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Suppression d'un produit");
+            alert.setHeaderText("Etes-vous sur de vouloir supprimer le jouet "
+                    + tableView.getSelectionModel().getSelectedItem().getName() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                ToyRepository toyRepository = new ToyRepository();
+                System.out.println("aywah"+tableView.getSelectionModel().getSelectedItem().getId());
+                toyRepository.deleteToy(tableView.getSelectionModel().getSelectedItem().getId());
+                refresh();
+
+            }
+
+        }
+    }
+
+
+    void Afficher() {
+
+        oblist = FXCollections.observableArrayList(toyRepository.getAll());
+
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        nom.setCellValueFactory(new PropertyValueFactory<>("name"));
+        type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+        prix.setCellValueFactory(new PropertyValueFactory<>("price"));
+        fseur.setCellValueFactory(new PropertyValueFactory<>("vendor_name"));
+        stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
+        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
+//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
+
+
+        filteredData = new FilteredList<>(oblist, b -> true);
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(toy -> newValue == null || newValue.isEmpty() || toy.getName().toLowerCase()
+                    .contains(newValue.toLowerCase()));
+            changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
+        });
+        pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
+
+
+        int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
+        pagination.setPageCount(totalPage);
+        pagination.setCurrentPageIndex(0);
+        changeTableView(0, ROWS_PER_PAGE);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+
+
+    }
+
+    // actualiser la liste aprés chaque opération
+    public void refresh(){
+        oblist.clear();
+        Afficher();
+    }
+
+
+    public void mailingList(final String subject, final List<String> emailToAddresses,
+                                   final String emailBodyText) {
+
+        // from email address
+        final String username = "3laiag.fsegn@gmail.com";
+        // make sure you put your correct password
+        final String password = "3laiag2020";
+        // smtp email server
+        final String smtpHost = "smtp.googlemail.com";
+        // We will put some properties for smtp configurations
+        Properties props = new Properties();
+        // do not change - start
+        props.put("mail.smtp.user", "username");
+        props.put("mail.smtp.host", smtpHost);
+        // props.put("mail.debug", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");
+        // do not change - end
+
+        // we authentcate using your email and password and on successful
+        // we create the session
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        String emails = null;
+
+        try {
+            // we create new message
+            Message message = new MimeMessage(session);
+
+            // set the from 'email address'
+            message.setFrom(new InternetAddress(username));
+
+            // set email subject
+            message.setSubject(subject);
+
+            // set email message
+            // this will send html mail to the intended recipients
+            // if you do not want to send html mail then you do not need to wrap the message
+            // inside html tags
+            String content = "<html>\n<body>\n";
+            content += emailBodyText + "\n";
+            content += "\n";
+            content += "</body>\n</html>";
+            message.setContent(content, "text/html");
+
+            // form all emails in a comma separated string
+            StringBuilder sb = new StringBuilder();
+
+            int i = 0;
+            for (String email : emailToAddresses) {
+                sb.append(email);
+                i++;
+                if (emailToAddresses.size() > i) {
+                    sb.append(", ");
+                }
+            }
+
+            emails = sb.toString();
+
+            // set 'to email address'
+            // you can set also CC or TO for recipient type
+            message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(sb.toString()));
+
+            System.out.println("Sending Email to " + emails + " from " + username + " with Subject - " + subject);
+
+            // send the email
+            Transport.send(message);
+
+            System.out.println("Email successfully sent to " + emails);
+        } catch (MessagingException e) {
+            System.out.println("Email sending failed to " + emails);
+            System.out.println(e);
+        }
+    }
+
 }
-
-
-
 
 
 

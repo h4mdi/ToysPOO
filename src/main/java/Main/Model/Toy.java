@@ -26,6 +26,10 @@ public class Toy {
         this.stock = stock;
     }
 
+    public Toy() {
+
+    }
+
     public int getId() {
         return id;
     }

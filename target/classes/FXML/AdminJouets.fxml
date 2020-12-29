@@ -7,8 +7,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -170,17 +168,16 @@
                                                       <TableColumn fx:id="fseur" prefWidth="73.0" text="Fournisseur" />
                                                       <TableColumn fx:id="stock" maxWidth="121.0" prefWidth="95.0" text="Stock" />
                                                       <TableColumn fx:id="pa" prefWidth="66.0" text="Plage d'age" />
-                                                      <TableColumn fx:id="photo" prefWidth="92.0" text="Photo" />
                                                    </columns>
                                                    <columnResizePolicy>
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                    </columnResizePolicy>
                                                 </TableView>
                                                 <Pagination fx:id="pagination" layoutX="227.0" layoutY="457.0" prefHeight="27.0" prefWidth="347.0" />
-                                                <Button fx:id="ajouterProd" layoutX="56.0" layoutY="501.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Ajouter Jouet" />
+                                                <Button fx:id="btn_addToy" layoutX="56.0" layoutY="501.0" mnemonicParsing="false" onAction="#show_addForm" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Ajouter Jouet" />
                                                 <Button fx:id="btn_suppProd" layoutX="245.0" layoutY="501.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Supprimer Jouet" />
-                                                <Button fx:id="btn_modifierProd" layoutX="431.0" layoutY="501.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Modifier Jouet" />
-                                                <Button fx:id="btn_afficherPhoto" layoutX="610.0" layoutY="501.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Afficher La photo" />
+                                                <Button fx:id="btn_updateToy" layoutX="431.0" layoutY="501.0" mnemonicParsing="false" onAction="#show_updateForm" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Modifier Jouet" />
+                                                <Button fx:id="btn_afficherPhoto" layoutX="610.0" layoutY="501.0" mnemonicParsing="false" onAction="#ShowPhoto" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Afficher La photo" />
                                                 <TextField fx:id="nameFilter" layoutX="56.0" layoutY="4.0" prefHeight="27.0" prefWidth="541.0" promptText="chercher un jouet" style="-fx-background-color: FFFFFF; -fx-border-color: #B7C3D7;" />
                                                 <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="568.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
@@ -276,31 +273,31 @@
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="nom2" layoutX="262.0" layoutY="99.0" prefHeight="30.0" prefWidth="193.0" stylesheets="@style2.css" />
-                                          <TextField fx:id="reference" layoutX="263.0" layoutY="143.0" prefHeight="34.0" prefWidth="197.0" />
-                                          <TextField fx:id="prixVente" layoutX="263.0" layoutY="192.0" prefHeight="32.0" prefWidth="201.0" />
-                                          <TextField fx:id="quantite" layoutX="261.0" layoutY="293.0" prefHeight="33.0" prefWidth="206.0" />
+                                          <TextField fx:id="insert_name" layoutX="262.0" layoutY="99.0" prefHeight="30.0" prefWidth="193.0" stylesheets="@style2.css" />
+                                          <TextField fx:id="insert_vendor" layoutX="263.0" layoutY="143.0" prefHeight="34.0" prefWidth="197.0" />
+                                          <TextField fx:id="insert_price" layoutX="263.0" layoutY="192.0" prefHeight="32.0" prefWidth="201.0" />
+                                          <TextField fx:id="insert_stock" layoutX="261.0" layoutY="293.0" prefHeight="33.0" prefWidth="206.0" />
                                           <TextField fx:id="photoProduit" layoutX="262.0" layoutY="338.0" prefHeight="33.0" prefWidth="207.0" />
                                           <Label layoutX="64.0" layoutY="390.0" text="Type">
                                              <font>
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="SousCat" layoutX="263.0" layoutY="389.0" prefHeight="34.0" prefWidth="213.0" />
-                                          <Button fx:id="PhotoUpload" layoutX="474.0" layoutY="342.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="23.0" text="Button" />
+                                          <ComboBox fx:id="insert_type" layoutX="263.0" layoutY="389.0" prefHeight="34.0" prefWidth="213.0" />
+                                          <Button fx:id="PhotoUpload" ellipsisString="choisir" layoutX="474.0" layoutY="342.0" mnemonicParsing="false" onAction="#photoChooser" prefHeight="20.0" prefWidth="23.0" style="-fx-background-color: #777;" text="Button" textFill="WHITE" />
                                           <Label layoutX="241.0" layoutY="15.0" text="Ajouter un Jouet">
                                              <font>
                                                 <Font size="34.0" />
                                              </font>
                                           </Label>
-                                          <Spinner layoutX="261.0" layoutY="242.0" prefHeight="32.0" prefWidth="84.0" />
-                                          <Spinner layoutX="379.0" layoutY="242.0" prefHeight="32.0" prefWidth="83.0" />
                                           <Label layoutX="360.0" layoutY="242.0" prefHeight="32.0" prefWidth="9.0" text="-">
                                              <font>
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="ajouterProd1" layoutX="486.0" layoutY="503.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Ajouter Jouet" />
+                                          <Button fx:id="btn_Insert" layoutX="486.0" layoutY="503.0" mnemonicParsing="false" onAction="#Enregistrer_AjoutProduit" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Insert" />
+                                          <TextField fx:id="update_min1" layoutX="264.0" layoutY="242.0" prefHeight="32.0" prefWidth="85.0" />
+                                          <TextField fx:id="update_max1" layoutX="380.0" layoutY="242.0" prefHeight="32.0" prefWidth="85.0" />
                                        </children>
                                     </Pane>
                                  </children>
@@ -361,25 +358,26 @@
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="nom21" layoutX="260.0" layoutY="117.0" prefHeight="30.0" prefWidth="193.0" stylesheets="@style2.css" />
-                                          <TextField fx:id="reference1" layoutX="261.0" layoutY="161.0" prefHeight="34.0" prefWidth="197.0" />
-                                          <TextField fx:id="prixVente1" layoutX="261.0" layoutY="210.0" prefHeight="32.0" prefWidth="201.0" />
-                                          <TextField fx:id="quantite1" layoutX="259.0" layoutY="311.0" prefHeight="33.0" prefWidth="206.0" />
-                                          <TextField fx:id="photoProduit1" layoutX="260.0" layoutY="356.0" prefHeight="33.0" prefWidth="207.0" />
+                                          <TextField fx:id="update_name" layoutX="260.0" layoutY="117.0" prefHeight="30.0" prefWidth="193.0" stylesheets="@style2.css" />
+                                          <TextField fx:id="update_vendor" layoutX="261.0" layoutY="161.0" prefHeight="34.0" prefWidth="197.0" />
+                                          <TextField fx:id="update_price" layoutX="261.0" layoutY="210.0" prefHeight="32.0" prefWidth="201.0" />
+                                          <TextField fx:id="update_stock" layoutX="259.0" layoutY="311.0" prefHeight="33.0" prefWidth="206.0" />
+                                          <TextField fx:id="update_picture" layoutX="260.0" layoutY="356.0" prefHeight="33.0" prefWidth="207.0" />
                                           <Label layoutX="62.0" layoutY="408.0" text="Type">
                                              <font>
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="SousCat1" layoutX="261.0" layoutY="407.0" prefHeight="34.0" prefWidth="213.0" />
-                                          <Spinner layoutX="259.0" layoutY="260.0" prefHeight="32.0" prefWidth="84.0" />
-                                          <Spinner layoutX="377.0" layoutY="260.0" prefHeight="32.0" prefWidth="83.0" />
+                                          <ComboBox fx:id="update_type" layoutX="261.0" layoutY="407.0" prefHeight="34.0" prefWidth="213.0" />
                                           <Label layoutX="358.0" layoutY="260.0" prefHeight="32.0" prefWidth="9.0" text="-">
                                              <font>
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <Button fx:id="ajouterProd11" layoutX="489.0" layoutY="502.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Modifier Jouet" />
+                                          <Button fx:id="ajouterProd11" layoutX="489.0" layoutY="502.0" mnemonicParsing="false" onAction="#save_Update" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Modifier Jouet" />
+                                          <TextField fx:id="update_min" layoutX="261.0" layoutY="260.0" prefHeight="32.0" prefWidth="85.0" />
+                                          <TextField fx:id="update_max" layoutX="377.0" layoutY="260.0" prefHeight="32.0" prefWidth="85.0" />
+                                          <Button fx:id="PhotoUpload1" ellipsisString="choisir" layoutX="470.0" layoutY="360.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="23.0" style="-fx-background-color: #777;" text="Button" textFill="WHITE" />
                                        </children>
                                     </Pane>
                                  </children>

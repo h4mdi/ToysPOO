@@ -1,6 +1,8 @@
 package Main.Controllers;
 
 import Main.DAO.SingletonConnection;
+import Main.Metier.ToyRepository;
+import Main.Model.Toy;
 import Main.Model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +24,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AdminController implements Initializable {
-
 
 
 
