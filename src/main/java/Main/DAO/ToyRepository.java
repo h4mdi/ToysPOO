@@ -232,5 +232,30 @@ public class ToyRepository implements IToyRepository {
 
         return salesByPersonList;    }
 
+    @Override
+    public List<SalesByPerson> GetMaxSalesByPerson(Date startDate, Date endDate) {
+        List<SalesByPerson> MaxsalesByPersonList = new ArrayList<SalesByPerson>();
+        try {
+            CallableStatement callableStatement = connection.prepareCall("{call GetMaxSalesByPerson(?,?)}");
+            callableStatement.setDate(1, startDate);
+            callableStatement.setDate(2, endDate);
+            ResultSet rs = callableStatement.executeQuery();
+
+            while (rs.next()) {
+                SalesByPerson salesByPerson = new SalesByPerson();
+                int id= rs.getInt("SalesPersonId");
+                Double cv = rs.getDouble("SUM(od.Quantity*od.UnitPrice)") ;
+                salesByPerson.setId(id);
+                salesByPerson.setCv(cv);
+                MaxsalesByPersonList.add(salesByPerson);
+                System.out.println(MaxsalesByPersonList);
+                System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return MaxsalesByPersonList;     }
+
 
 }
