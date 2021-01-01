@@ -1,8 +1,6 @@
 package Main.Controllers;
 
 import Main.DAO.SingletonConnection;
-import Main.Metier.ToyRepository;
-import Main.Model.Toy;
 import Main.Model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -96,7 +94,7 @@ public class AdminController implements Initializable {
 
     public void OpenJouet(ActionEvent actionEvent) throws IOException {
 
-            Parent parent = FXMLLoader.load(getClass().getResource("/FXML/AdminJouets.fxml"));
+            Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Toys.fxml"));
             Scene scene = new Scene(parent);
             Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             homeStage.setScene(scene);

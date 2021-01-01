@@ -1,7 +1,9 @@
 package Main.Controllers;
 
-import Main.Metier.ToyRepository;
+import Main.DAO.Interfaces.IToyRepository;
+import Main.DAO.ToyRepository;
 import Main.Model.Toy;
+import Main.Model.ToyType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -27,7 +29,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
 
-public class AdminJouetsController implements Initializable {
+public class ToyController implements Initializable {
     @FXML
     private TabPane tab;
     @FXML
@@ -97,6 +99,8 @@ public class AdminJouetsController implements Initializable {
     private ComboBox<String> update_type;
 
     @FXML
+    private TextField toyphoto;
+    @FXML
     private TextField insert_name;
     @FXML
     private TextField insert_vendor;
@@ -107,22 +111,31 @@ public class AdminJouetsController implements Initializable {
     @FXML
     private TextField photoProduit;
     @FXML
-    private ComboBox<String> insert_type;
+    private ComboBox<String> insert_Vendor;
+
+    @FXML
+    private ComboBox<String> insert_type1;
 
 @FXML
     private Button btn_delToy ;
     ObservableList<Toy> oblist ;
 
     Toy t = new Toy();
-    ToyRepository toyRepository = new ToyRepository();
+    IToyRepository toyRepository = new ToyRepository();
+    private String absolutePathPhoto;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-
         Afficher();
+        insert_Vendor.setItems(FXCollections.observableArrayList(toyRepository.getAllVendors()));
+        insert_type1.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
+
+
     }
+
+
 
 
     public void PrixFilter(ActionEvent event) {
@@ -166,17 +179,8 @@ public class AdminJouetsController implements Initializable {
             homeStage.show();
         } else {
             alert.close();
-        }
+        } }
 
-
-    }
-
-//    public void onEditChanged(TableColumn.CellEditEvent<User, String> userStringCellEditEvent) {
-//        User user =tableView.getSelectionModel().getSelectedItem();
-//        user.setLogin(userStringCellEditEvent.getNewValue());
-//        System.out.println(userStringCellEditEvent.getNewValue());
-//
-//    }
 
     private void changeTableView(int index, int limit) {
 
@@ -211,7 +215,7 @@ public class AdminJouetsController implements Initializable {
     private void ShowPhoto(ActionEvent event) throws SQLException {
 
         FXMLLoader Loader = new FXMLLoader();
-        Loader.setLocation(getClass().getResource("/FXML/PhotoProduit.fxml"));
+        Loader.setLocation(getClass().getResource("/FXML/ToyPhoto.fxml"));
 
         try {
             Loader.load();
@@ -236,8 +240,6 @@ public class AdminJouetsController implements Initializable {
     @FXML
     private void show_addForm(ActionEvent event) {
         tab.getSelectionModel().select(1);
-        // trying.setVisible(true);
-
     }
 
 
@@ -278,7 +280,7 @@ public class AdminJouetsController implements Initializable {
                 Toy toy = new Toy(tableView.getSelectionModel().getSelectedItem().getId(),
                         update_name.getText(),
                         Integer.parseInt(update_min.getText()),
-                        update_picture.getText(),
+                        toyphoto.getText(),
 
                         Double.parseDouble(update_price.getText()),
                         update_vendor.getText(),
@@ -289,7 +291,7 @@ public class AdminJouetsController implements Initializable {
 
                         );
 
-                toyRepository.updateToy(toy);
+                toyRepository.update(toy);
                 System.out.println(toy);
                 System.out.println("___________a_________");
 
@@ -308,9 +310,6 @@ public class AdminJouetsController implements Initializable {
         }
     }
 
-
-
-
     @FXML
     private void photoChooser(ActionEvent event)
     {
@@ -322,8 +321,8 @@ public class AdminJouetsController implements Initializable {
         File choix = fileChooser.showOpenDialog(null);
         if (choix != null) {
 
-            String absolutePathPhoto = choix.getAbsolutePath();
-            update_picture.setText(choix.getName());
+            absolutePathPhoto = choix.getAbsolutePath();
+            toyphoto.setText(choix.getName());
         } else {
             System.out.println("Image introuvable");
         }
@@ -331,16 +330,16 @@ public class AdminJouetsController implements Initializable {
     }
 
     @FXML
-    private void Enregistrer_AjoutProduit(ActionEvent event) {
+    private void SaveAddToy(ActionEvent event) {
 
-//
-//        copyImages.deplacerVers(photoProduit, absolutePathPhoto,"C:\\Users\\MED\\Desktop\\esprit\\3eme\\med\\src\\images");
-//        copyImages.deplacerVers(photoProduit, absolutePathPhoto,"C:\\wamp64\\www\\pidevweb\\web\\img");
+
+        deplacerVers(toyphoto, absolutePathPhoto,"C:\\Users\\hp\\Sesame\\3Java_Sesame\\Projet_POO_mvn_fin\\src\\main\\resources\\toysphoto");
+        deplacerVers(toyphoto, absolutePathPhoto,"C:\\wamp64\\www\\toys\\photos");
         Toy toy = new Toy() ;
 
                toy.setName(insert_name.getText());
         toy.setType_id(Integer.parseInt(insert_price.getText())) ;//type
-            toy.setPhoto(photoProduit.getText()) ;
+            toy.setPhoto(toyphoto.getText()) ;
                toy.setPrice( Double.parseDouble(insert_price.getText())) ;
 
                 toy.setVendor_name(insert_vendor.getText());
@@ -351,7 +350,7 @@ public class AdminJouetsController implements Initializable {
 
 
         if (insert_name.getText().equals("") || insert_price.getText().equals("") ||
-                insert_price.getText()==null || photoProduit.getText()==null || insert_vendor.getText()==null || insert_stock.getText().equals("")  ) {
+                insert_price.getText()==null || toyphoto.getText()==null || insert_vendor.getText()==null || insert_stock.getText().equals("")  ) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Alerte");
             alert.setHeaderText("Vous devez remplir TOUT LES CHAMPS SVP");
@@ -362,14 +361,14 @@ public class AdminJouetsController implements Initializable {
                 insert_name.setText("");
                 insert_price.setText("");
                 insert_vendor.setText("");
-                photoProduit.setText("");
+                toyphoto.setText("");
                 insert_stock.setText("");
 
             }
 
         }
 
-        else {  toyRepository.addToy(toy);
+        else {  toyRepository.add(toy);
             Afficher();
             insert_name.setText("");
             insert_price.setText("");
@@ -378,16 +377,12 @@ public class AdminJouetsController implements Initializable {
             insert_stock.setText("");
             tab.getSelectionModel().select(0);
 
-            //maillist sending mail
+            //maillist
             List<String> emails = toyRepository.getAllMails();
-
-            // email subject
             String subject = "Nouvelle collection MBA && CBYTE !";
-
-            // message which is to be sent
+            // message
             String message = "La nouvelle collection est arrivée ! Découvrez-vite les nouveautés ! .\n";
-
-            // send the email to multiple recipients
+            // send
             mailingList(subject, emails, message);
         }
 
@@ -405,7 +400,7 @@ public class AdminJouetsController implements Initializable {
             if (result.get() == ButtonType.OK) {
                 ToyRepository toyRepository = new ToyRepository();
                 System.out.println("aywah"+tableView.getSelectionModel().getSelectedItem().getId());
-                toyRepository.deleteToy(tableView.getSelectionModel().getSelectedItem().getId());
+                toyRepository.delete(tableView.getSelectionModel().getSelectedItem().getId());
                 refresh();
 
             }
@@ -540,6 +535,56 @@ public class AdminJouetsController implements Initializable {
             System.out.println("Email sending failed to " + emails);
             System.out.println(e);
         }
+    }
+
+
+
+    @FXML
+    private void ToysTypeAdd(ActionEvent event) throws SQLException {
+
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Ajouter un nouveau type");
+        dialog.setContentText("Veuillez introduire le nouveau type désiré");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+            if(result.get()!=""){
+            //System.out.println("Type: " + result.get());
+                ToyType toyType = new ToyType();
+                toyType.setName(result.get());
+                toyRepository.addType(toyType);
+                insert_type1.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
+           }
+        }
+
+    }
+
+
+    public void deplacerVers(TextField txtField, String path, String copyTo) {
+        if (!(txtField.getText().equals("")) ){
+            try {
+                String[] args = { "CMD", "/C", "COPY", "/Y", path, copyTo };
+                Process p = Runtime.getRuntime().exec(args);
+                p.waitFor();
+                System.out.println("executé");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    @FXML
+    public void openstats(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
     }
 
 }
