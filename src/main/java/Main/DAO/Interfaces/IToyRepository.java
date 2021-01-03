@@ -1,6 +1,7 @@
 package Main.DAO.Interfaces;
 
 import Main.Model.SalesByPerson;
+import Main.Model.SalesByToy;
 import Main.Model.Toy;
 import Main.Model.ToyType;
 
@@ -16,5 +17,7 @@ public interface IToyRepository extends IRepository<Toy> {
     public void addType(ToyType toyType);
     public List<SalesByPerson> GetSalesByPerson(Date startDate, Date endDat);
     public List<SalesByPerson> GetMaxSalesByPerson(Date startDate, Date endDat);
+    public List<Double> GetTotalSales(Date startDate, Date endDat);
+    public List<SalesByToy> GetSalesByToy(Date startDate, Date endDat);
 
 }

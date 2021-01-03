@@ -120,7 +120,6 @@ public class ToyController implements Initializable {
     private Button btn_delToy ;
     ObservableList<Toy> oblist ;
 
-    Toy t = new Toy();
     IToyRepository toyRepository = new ToyRepository();
     private String absolutePathPhoto;
 
@@ -221,11 +220,11 @@ public class ToyController implements Initializable {
             Loader.load();
             Toy toy = new Toy();
             ToyRepository toyRepository = new ToyRepository();
-            PhotoProduitController photoProduitController = Loader.getController();
+            ToyphotoController toyphotoController = Loader.getController();
 
             toy = toyRepository.getPhotos(tableView.getSelectionModel().getSelectedItem().getPhoto());
 
-            photoProduitController.setProduit(toy);
+            toyphotoController.setProduit(toy);
             Parent p = Loader.getRoot();
             Stage stage = new Stage();
             stage.setScene(new Scene(p));
@@ -586,6 +585,19 @@ public class ToyController implements Initializable {
 
         statsStage.show();
     }
+
+    @FXML
+    public void OpenJouet(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Toys.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
 
 }
 

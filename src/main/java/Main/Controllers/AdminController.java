@@ -67,6 +67,51 @@ public class AdminController implements Initializable {
         tableView.setItems(oblist);
     }
 
+
+    /* ================ /*
+  * sideBar Links *
+   ==================*/
+
+    //Accueil
+
+
+    //Gestion jouets
+    @FXML
+    public void OpenJouet(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Toys.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
+    //Gestion des fournisseurs
+
+    //Gestion des ventes
+
+    //Statistiques
+    @FXML
+    public void openstats(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
+    }
+
+    //Gestion des utilisateurs
+
+    //Maillist
+
+
+    //Se déconnecter
+    @FXML
     public void logout(ActionEvent actionEvent) throws IOException {
         ButtonType yes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -90,19 +135,6 @@ public class AdminController implements Initializable {
 
 
     }
-
-
-    public void OpenJouet(ActionEvent actionEvent) throws IOException {
-
-            Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Toys.fxml"));
-            Scene scene = new Scene(parent);
-            Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            homeStage.setScene(scene);
-            homeStage.centerOnScreen();
-
-            homeStage.show();
-        }
-
 
 
 

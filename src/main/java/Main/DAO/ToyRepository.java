@@ -1,10 +1,7 @@
 package Main.DAO;
 
 import Main.DAO.Interfaces.IToyRepository;
-import Main.Model.SalesByPerson;
-import Main.Model.Toy;
-import Main.Model.ToyType;
-import Main.Model.Vendor;
+import Main.Model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -257,5 +254,49 @@ public class ToyRepository implements IToyRepository {
 
         return MaxsalesByPersonList;     }
 
+    @Override
+    public List<SalesByToy> GetSalesByToy(Date startDate, Date endDate) {
+        List<SalesByToy> salesByToyList = new ArrayList<SalesByToy>();
+        try {
+            CallableStatement callableStatement = connection.prepareCall("{call GetSalesByToy(?,?)}");
+            callableStatement.setDate(1, startDate);
+            callableStatement.setDate(2, endDate);
+            ResultSet rs = callableStatement.executeQuery();
 
+            while (rs.next()) {
+                SalesByToy salesByToy = new SalesByToy();
+                String name= rs.getString("Name");
+                Double cv = rs.getDouble("SUM(od.Quantity*od.UnitPrice)") ;
+                salesByToy.setName(name);
+                salesByToy.setCv(cv);
+                salesByToyList.add(salesByToy);
+                System.out.println(salesByToyList);
+                System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return salesByToyList;    }
+
+    @Override
+    public ArrayList<Double> GetTotalSales(Date startDate, Date endDate) {
+        ArrayList<Double> totalSalesList = new ArrayList<>();
+        try {
+            CallableStatement callableStatement = connection.prepareCall("{call GetTotalSales(?,?)}");
+            callableStatement.setDate(1, startDate);
+            callableStatement.setDate(2, endDate);
+            ResultSet rs = callableStatement.executeQuery();
+
+            while (rs.next()) {
+                Double cvg = rs.getDouble("SUM(od.Quantity*od.UnitPrice)") ;
+                totalSalesList.add(cvg);
+                System.out.println(totalSalesList);
+                System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalSalesList;    }
 }

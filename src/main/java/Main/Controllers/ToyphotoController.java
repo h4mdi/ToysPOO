@@ -16,12 +16,7 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * FXML Controller class
- *
- * @author user
- */
-public class PhotoProduitController implements Initializable {
+public class ToyphotoController implements Initializable {
 
    
     @FXML
@@ -32,15 +27,11 @@ public class PhotoProduitController implements Initializable {
     private void aaaa(MouseEvent event) {
       System.exit(0);
     }
-   
-   /* private Commentaire c;
-    CommentaireService co = new CommentaireService();
-    UserService userService = new UserService();
-    User user;*/
+
     private Toy toy;
-    private static PhotoProduitController instance;
+    private static ToyphotoController instance;
     
-    public PhotoProduitController() {
+    public ToyphotoController() {
         instance = this;
     }
     
@@ -54,29 +45,14 @@ public class PhotoProduitController implements Initializable {
         this.toy = toy;
         Image im = new Image(toy.getPhoto());
         idImg.setImage(im);
-       
-       //idDateS.setValue(this.programme.getDateSortie());
-        //idDateP.setValue(this.programme.getDateProjection());
-       
-        System.out.println(toy.getId());
-     
+
     }
   
    
     
-    static public PhotoProduitController getInstance() { 
+    static public ToyphotoController getInstance() {
         return instance;
     }
   
 
-  /*  @FXML
-    public void handleBtnAction (ActionEvent event) throws SQLException{
-        UserSession session = UserSession.getInstance(null,null,null,null,null,null,null);
-        c.setId_programme(programme.getId());
-        int idd = userService.get(session.getUserName()).getId();
-        c.setUser(idd);
-        c.setContenu(contenu.getText());
-        co.ajouter(c);
-    }
-  */
 }

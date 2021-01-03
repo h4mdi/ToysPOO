@@ -1,6 +1,8 @@
 package Main.Controllers;
 
+import Main.DAO.Interfaces.IToyRepository;
 import Main.DAO.SingletonConnection;
+import Main.DAO.ToyRepository;
 import Main.Model.Toy;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,12 +10,18 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -82,6 +90,7 @@ public class StoreController implements Initializable {
     private FilteredList<Toy> filteredData;
 
     private static final int ROWS_PER_PAGE = 4;
+    IToyRepository toyRepository = new ToyRepository();
 
 
 
@@ -100,71 +109,32 @@ public class StoreController implements Initializable {
         plageA6_9.setToggleGroup(plageAgeGroupe);
         plageA9plus.setToggleGroup(plageAgeGroupe);
 
-        Connection connection = SingletonConnection.getConnexion();
+        Afficher();
+        tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
 
-// * where seulement ;
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id ");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                oblist.add(new Toy (rs.getInt("Id"),
-                        rs.getString("Name"),rs.getInt("TypeId")
-                        ,rs.getString("PicturePath"),rs.getDouble("Price"),rs.getString("v.Name"),
-                        rs.getInt("MinAge"),rs.getInt("MaxAge"),
-                        rs.getInt("Quantity")));
+                FXMLLoader Loader = new FXMLLoader();
+                Loader.setLocation(getClass().getResource("/FXML/ToyPhoto.fxml"));
 
+                try {
+                    Loader.load();
+                    Toy toy = new Toy();
+                    ToyRepository toyRepository = new ToyRepository();
+                    ToyphotoController toyphotoController = Loader.getController();
+
+                    toy = toyRepository.getPhotos(tableView.getSelectionModel().getSelectedItem().getPhoto());
+
+                    toyphotoController.setProduit(toy);
+                    Parent p = Loader.getRoot();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(p));
+                    stage.show();
+                } catch (IOException | SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
-
-        } catch (SQLException  e) {
-            e.printStackTrace();
-        }
-
-
-
-        nom.setCellValueFactory(new PropertyValueFactory<>("name"));
-        type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
-        prix.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-//        pa.setCellValueFactory(new PropertyValueFactory<>("v"));
-        pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
-
-        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
-
-
-
-
-
-        filteredData = new FilteredList<>(oblist, b -> true);
-
-        // 2. Set the filter Predicate whenever the filter changes.
-        nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(toy -> newValue == null || newValue.isEmpty() || toy.getName().toLowerCase()
-                    .contains(newValue.toLowerCase()));
-            changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
         });
-        pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
-
-
-        int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
-        pagination.setPageCount(totalPage);
-        pagination.setCurrentPageIndex(0);
-        changeTableView(0, ROWS_PER_PAGE);
-        pagination.currentPageIndexProperty().addListener(
-                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
-
-
-
-//
-//        // 3. Wrap the FilteredList in a SortedList.
-//        SortedList<Toy> sortedData = new SortedList<>(filteredData);
-//
-//        // 4. Bind the SortedList comparator to the TableView comparator.
-//        // 	  Otherwise, sorting the TableView would have no effect.
-//        sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-//
-//        // 5. Add sorted (and filtered) data to the table.
-//        tableView.setItems(sortedData);
-
 
     }
 
@@ -172,12 +142,9 @@ public class StoreController implements Initializable {
     public void PrixFilter(ActionEvent event){
         choix = prixFilter.getValue().toString();
         System.out.println(choix);
-//stateACS is a toggle button
         if (choix.equals("Prix croissant")) {
             Comparator<Toy> comparator = Comparator.comparing(Toy::getPrice);
             changeTableView2(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
-
-            //Sort in asc order
             oblist.sort(comparator);
         }else if (choix.equals("Prix décroissant")) {
             Comparator<Toy> comparator = Comparator.comparing(Toy::getPrice).reversed();
@@ -191,7 +158,7 @@ public class StoreController implements Initializable {
 
     }
 
-    //
+
     public void maillist() throws IOException {
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("S'inscrire au maillist");
@@ -234,6 +201,49 @@ public class StoreController implements Initializable {
         tableView.setItems(oblist);
 
     }
+
+    void Afficher() {
+
+        oblist = FXCollections.observableArrayList(toyRepository.getAll());
+
+
+        nom.setCellValueFactory(new PropertyValueFactory<>("name"));
+        type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+        prix.setCellValueFactory(new PropertyValueFactory<>("price"));
+        pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
+        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
+//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
+
+
+        filteredData = new FilteredList<>(oblist, b -> true);
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(toy -> newValue == null || newValue.isEmpty() || toy.getName().toLowerCase()
+                    .contains(newValue.toLowerCase()));
+            changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
+        });
+        pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
+
+
+        int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
+        pagination.setPageCount(totalPage);
+        pagination.setCurrentPageIndex(0);
+        changeTableView(0, ROWS_PER_PAGE);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+
+
+    }
+
+    // actualiser la liste aprés chaque opération
+    public void refresh(){
+        oblist.clear();
+        Afficher();
+    }
+
+
+
 }
 
 
