@@ -19,13 +19,16 @@ public class ToyRepository implements IToyRepository {
     public List<Toy> getAll() {
         List<Toy> Toylist = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id ");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id JOIN toytypes" +
+                    " tt on tt.id=t.typeid");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Toy toy = new Toy(rs.getInt("Id"),
                         rs.getString("Name"),rs.getInt("TypeId")
-                        ,rs.getString("PicturePath"),rs.getDouble("Price"),rs.getString("v.Name"),
+                        ,rs.getString("PicturePath"),rs.getDouble("Price"),
+//                        rs.getString("v.Name"),
+                        rs.getString("tt.name"),
                         rs.getInt("MaxAge"),rs.getInt("MinAge"),
                         rs.getInt("Quantity"));
 

@@ -4,6 +4,7 @@ import Main.DAO.Interfaces.IToyRepository;
 import Main.DAO.SingletonConnection;
 import Main.DAO.ToyRepository;
 import Main.Model.Toy;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -14,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -92,7 +94,7 @@ public class StoreController implements Initializable {
     private static final int ROWS_PER_PAGE = 4;
     IToyRepository toyRepository = new ToyRepository();
 
-
+@FXML ImageView img  ;
 
 
     @Override
@@ -135,6 +137,23 @@ public class StoreController implements Initializable {
                 }
             }
         });
+
+        img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            Parent parent = null;
+            try {
+                parent = FXMLLoader.load(getClass().getResource("/FXML/login.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Scene scene = new Scene(parent);
+            Stage homeStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            homeStage.setScene(scene);
+            homeStage.centerOnScreen();
+
+            homeStage.show();
+            event.consume();
+        });
+
 
     }
 
@@ -208,11 +227,18 @@ public class StoreController implements Initializable {
 
 
         nom.setCellValueFactory(new PropertyValueFactory<>("name"));
-        type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+       // type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+
+        type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                String.valueOf(cellData.getValue().getType_id())));
+
         prix.setCellValueFactory(new PropertyValueFactory<>("price"));
-        pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
+        //pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
         // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
 //        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
+
+        pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                        cellData.getValue().getMax_age() + " ans et  " + cellData.getValue().getMin_age()+" ans"));
 
 
         filteredData = new FilteredList<>(oblist, b -> true);
@@ -241,6 +267,7 @@ public class StoreController implements Initializable {
         oblist.clear();
         Afficher();
     }
+
 
 
 

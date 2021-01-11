@@ -131,8 +131,7 @@ public class ToyController implements Initializable {
         insert_Vendor.setItems(FXCollections.observableArrayList(toyRepository.getAllVendors()));
         insert_type1.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
 
-
-    }
+            }
 
 
 
@@ -597,6 +596,10 @@ public class ToyController implements Initializable {
 
         homeStage.show();
     }
+
+
+
+
 
 
 }

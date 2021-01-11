@@ -84,7 +84,22 @@ public class AuthentificationController implements IMetier{
                 homeStage.show();
 
             }
+            else if(resultSet.getInt("u.isAdmin")==0){
+                infoBox("Connexion effectuée avec succès!",null,"Succès de connexion" );
+                Parent parent = FXMLLoader.load(getClass().getResource("/FXML/cashier.fxml"));
+
+
+                Scene scene = new Scene(parent);
+                Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                homeStage.setScene(scene);
+                homeStage.centerOnScreen();
+
+                homeStage.show();
+
+            }
+
         }
+
         catch(Exception e){
             e.printStackTrace();
         }
