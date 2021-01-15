@@ -42,7 +42,7 @@ public class OrderRepository implements IOrderRepository {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO orders (Id,Date,OrderNumber,salesPersonId,IsValid) " +
                     "VALUES (? ,? ,? ,? ,?)") ;
-            PreparedStatement ps1 = connection.prepareStatement("INSERT INTO orderdetails(OrderId,TotyId,Quantity,UnitPrice) VALUES (LAST_INSERT_ID() ,? ,? ,?)") ;
+            PreparedStatement ps1 = connection.prepareStatement("INSERT INTO orderdetails(OrderId,TotyId,Quantity,UnitPrice,orderNumber) VALUES (LAST_INSERT_ID() ,? ,? ,?,?)") ;
 
             ps.setInt(1,order.getId());
             ps.setDate(2, Date.valueOf(order.getDate()));
@@ -52,7 +52,9 @@ public class OrderRepository implements IOrderRepository {
 
             ps1.setInt(1,toy.getId());
             ps1.setInt(2,toy.getId());
-            ps1.setDouble(3,200);
+            ps1.setDouble(3,toy.getPrice());
+            ps1.setString(4,order.getOrderNumber());
+
 
             ps.executeUpdate();
             ps1.executeUpdate();
