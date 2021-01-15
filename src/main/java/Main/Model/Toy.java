@@ -12,9 +12,9 @@ public class Toy {
     private int min_age;
     private int max_age;
     private double stock;
+    private int vendorID ;
 
-
-    public Toy(int id, String name, int type_id, String photo, double price, String vendor_name, int min_age, int max_age, double stock) {
+    public Toy(int id, String name, int type_id, String photo, double price, String vendor_name, int min_age, int max_age, double stock, int vendorID) {
         this.id = id;
         this.name = name;
         this.type_id = type_id;
@@ -24,6 +24,15 @@ public class Toy {
         this.min_age = min_age;
         this.max_age = max_age;
         this.stock = stock;
+        this.vendorID = vendorID;
+    }
+
+    public int getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(int vendorID) {
+        this.vendorID = vendorID;
     }
 
     public Toy() {

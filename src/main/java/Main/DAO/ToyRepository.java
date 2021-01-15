@@ -30,7 +30,7 @@ public class ToyRepository implements IToyRepository {
 //                        rs.getString("v.Name"),
                         rs.getString("tt.name"),
                         rs.getInt("MaxAge"),rs.getInt("MinAge"),
-                        rs.getInt("Quantity"));
+                        rs.getInt("Quantity"),rs.getInt("vendorID"));
 
                 Toylist.add(toy);
                 System.out.println(Toylist);
@@ -281,6 +281,11 @@ public class ToyRepository implements IToyRepository {
         }
 
         return salesByToyList;    }
+
+    @Override
+    public Toy getToy() {
+        return null;
+    }
 
     @Override
     public ArrayList<Double> GetTotalSales(Date startDate, Date endDate) {

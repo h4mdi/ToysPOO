@@ -285,7 +285,7 @@ public class ToyController implements Initializable {
 
                         Integer.parseInt(update_min.getText()),
                         Integer.parseInt(update_max.getText()),
-                        Double.parseDouble(update_stock.getText())
+                        Double.parseDouble(update_stock.getText()),tableView.getSelectionModel().getSelectedItem().getVendorID()
 
                         );
 

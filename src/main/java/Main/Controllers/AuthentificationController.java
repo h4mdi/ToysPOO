@@ -2,6 +2,7 @@ package Main.Controllers;
 
 import Main.DAO.SingletonConnection;
 import Main.Metier.IMetier;
+import Main.Model.Session;
 import Main.Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,39 +66,51 @@ public class AuthentificationController implements IMetier{
         Connection connection = SingletonConnection.getConnexion();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users u WHERE u.login = ? and u.password = ?");
-            ps.setString(1,login);
-            ps.setString(2,password);
+            ps.setString(1, login);
+            ps.setString(2, password);
             ResultSet resultSet = ps.executeQuery();
+            User u = new User();
+
+            while (resultSet.next()) {
+                u.setLogin(resultSet.getString("u.Login"));
+                u.setId(resultSet.getInt("u.Id"));
+                u.setPassword(resultSet.getString("u.Password"));
+                u.setIsAdmin(resultSet.getInt("u.isAdmin"));
+
+                if (u.getIsAdmin() == 1) {
+                    infoBox("Connexion effectuée avec succès!", null, "Succès de connexion");
+                    Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+                    Scene scene = new Scene(parent);
+                    Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    homeStage.setScene(scene);
+                    homeStage.centerOnScreen();
+                    Session.start(u.getId());
+
+                    homeStage.show();
+
+
+                } else if (u.getIsAdmin()== 0) {
+                    infoBox("Connexion effectuée avec succès!", null, "Succès de connexion");
+                    Parent parent = FXMLLoader.load(getClass().getResource("/FXML/cashier.fxml"));
+
+
+                    Scene scene = new Scene(parent);
+                    Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    homeStage.setScene(scene);
+                    homeStage.centerOnScreen();
+                    Session.start(u.getId());
+
+
+                    homeStage.show();
+
+                }
+            }
             if(!resultSet.next()){
 
                 infoBox("Veuillez vérifier votre login et mot de passe", null, "Erreur de connexion");
 
 
-            }else if(resultSet.getInt("u.isAdmin")==1){
-                infoBox("Connexion effectuée avec succès!",null,"Succès de connexion" );
-                Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
-                Scene scene = new Scene(parent);
-                Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                homeStage.setScene(scene);
-                homeStage.centerOnScreen();
-
-                homeStage.show();
-
             }
-            else if(resultSet.getInt("u.isAdmin")==0){
-                infoBox("Connexion effectuée avec succès!",null,"Succès de connexion" );
-                Parent parent = FXMLLoader.load(getClass().getResource("/FXML/cashier.fxml"));
-
-
-                Scene scene = new Scene(parent);
-                Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                homeStage.setScene(scene);
-                homeStage.centerOnScreen();
-
-                homeStage.show();
-
-            }
-
         }
 
         catch(Exception e){

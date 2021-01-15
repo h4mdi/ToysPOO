@@ -1,13 +1,12 @@
 package Main.Controllers;
 
+import Main.DAO.Interfaces.IOrderRepository;
 import Main.DAO.Interfaces.IToyRepository;
+import Main.DAO.OrderRepository;
 import Main.DAO.ToyRepository;
+import Main.Model.Order;
+import Main.Model.Session;
 import Main.Model.Toy;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -23,11 +22,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -80,15 +78,17 @@ public class CashierController implements Initializable {
     ObservableList<Toy> oblist ;
 
     IToyRepository toyRepository = new ToyRepository();
+    IOrderRepository orderRepository = new OrderRepository();
     private String absolutePathPhoto;
     Double S = 0.0;
+    int orderNumber =1 ;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         Afficher();
 
-        //double clicks row recuperé
+        //double clicks row recuperer le jouet et le mettre dans la table 2
         tableView.setRowFactory( tv -> {
             TableRow<Toy> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -238,22 +238,40 @@ public class CashierController implements Initializable {
 
 
     @FXML
-    private void imprimer(ActionEvent event) throws FileNotFoundException, DocumentException {
+    private void imprimer(ActionEvent event) throws Exception {
 
-        Document document=new Document(PageSize.A4);
+//        Document document=new Document(PageSize.A4);
+//
+//        document.addAuthor("MBA&&CBYTE");
+//        document.addTitle("Payement");
+//        PdfWriter.getInstance(document, new FileOutputStream("Facture.pdf"));
+//
+//        document.open();
+//        for(int i=0;i<oblist.size();i++)
+//        {
+//            Paragraph paragraph=new Paragraph(oblist.get(i).toString());
+//            document.add(paragraph);
+//        }
+//
+//        document.close();
 
-        document.addAuthor("MBA&&CBYTE");
-        document.addTitle("Payement");
-        PdfWriter.getInstance(document, new FileOutputStream("Facture.pdf"));
 
-        document.open();
-        for(int i=0;i<oblist.size();i++)
-        {
-            Paragraph paragraph=new Paragraph(oblist.get(i).toString());
-            document.add(paragraph);
+        for (Toy toy : OrderList.getItems()) {
+            Order order = new Order();
+//            order.setId();
+            order.setDate(LocalDate.now());
+            order.setOrderNumber(String.valueOf(orderNumber));
+            order.setIsValid(1);
+            order.setSalesPersonId(Session.getCurrentSession());
+//            System.out.println(Session.getCurrentSession());
+           //add order
+            orderRepository.Cart(order,toy);
+//            System.out.println("le c est "+c);
+//             orderRepository.AddOrderDetails(order,toy);
         }
+        orderNumber++ ;
+        OrderList.getItems().clear();
 
-        document.close();
     }
 
 
