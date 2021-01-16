@@ -81,7 +81,7 @@ public class CashierController implements Initializable {
     IOrderRepository orderRepository = new OrderRepository();
     private String absolutePathPhoto;
     Double S = 0.0;
-    int orderNumber =1 ;
+    int orderNumber =0 ;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -104,6 +104,7 @@ public class CashierController implements Initializable {
 
                     nomP.setCellValueFactory(new PropertyValueFactory<>("name"));
                     prixP.setCellValueFactory(new PropertyValueFactory<>("price"));
+                    orderNumber =orderRepository.getLastOrderNumber()+1;
                     S= S+ rowData.getPrice();
                     total.setText(String.valueOf((S)));
                 }
@@ -269,7 +270,6 @@ public class CashierController implements Initializable {
 //            System.out.println("le c est "+c);
 //             orderRepository.AddOrderDetails(order,toy);
         }
-        orderNumber++ ;
         OrderList.getItems().clear();
 
     }

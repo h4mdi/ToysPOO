@@ -2,6 +2,9 @@ package Main.DAO.Interfaces;
 
 import Main.Model.Vendor;
 
-public interface IVendorRepository extends IRepository<Vendor> {
+import java.util.List;
 
+public interface IVendorRepository extends IRepository<Vendor> {
+    public List<Vendor> getAllVendors();
+    public void addVendors(Vendor Vendor);
 }

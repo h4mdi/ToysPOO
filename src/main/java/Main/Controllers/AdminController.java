@@ -137,6 +137,25 @@ public class AdminController implements Initializable {
     }
 
 
+    public void OpenFournisseur(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Vendor.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
+    public void OpenMaillist(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Maillist.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
 
 }
 

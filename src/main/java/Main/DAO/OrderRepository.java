@@ -69,31 +69,28 @@ public class OrderRepository implements IOrderRepository {
 
     }
 
+    @Override
+    public int getLastOrderNumber() {
+        int last=0 ;
 
-//    @Override
-//    public void AddOrderDetails(Order order,Toy toy) {
-//
-//        try {
-//            PreparedStatement ps = connection.prepareStatement("INSERT INTO orderdetails(OrderId,TotyId,Quantity,UnitPrice) " +
-//                    "VALUES (? ,? ,? ,?)") ;
-//
-//            ps.setInt(1,order.getId());
-//            ps.setInt(2,toy.getId());
-//            ps.setInt(3,toy.getId());
-//            ps.setDouble(4,200);
-//
-//
-//            ps.executeUpdate();
-//
-//            System.out.println("order détails ajouté");
-//
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            System.out.println("error");
-//
-//        }
-//
-//
-//    }
+        try {
+            PreparedStatement ps = connection.prepareStatement("  select * from orders order by OrderNumber desc limit 1") ;
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+               last= rs.getInt("OrderNumber") ;
+                System.out.println(last+"e5er wehed");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("error");
+
+    }
+        return last ;
+
+
+}
 
 }
