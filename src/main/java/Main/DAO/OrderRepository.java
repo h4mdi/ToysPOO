@@ -4,6 +4,7 @@ import Main.DAO.Interfaces.IOrderRepository;
 import Main.Model.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRepository implements IOrderRepository {
@@ -46,14 +47,14 @@ public class OrderRepository implements IOrderRepository {
 
             ps.setInt(1,order.getId());
             ps.setDate(2, Date.valueOf(order.getDate()));
-            ps.setString(3,order.getOrderNumber());
+            ps.setInt(3,order.getOrderNumber());
             ps.setInt(4,order.getSalesPersonId());
             ps.setInt(5,order.getIsValid());
 
             ps1.setInt(1,toy.getId());
             ps1.setInt(2,toy.getId());
             ps1.setDouble(3,toy.getPrice());
-            ps1.setString(4,order.getOrderNumber());
+            ps1.setInt(4,order.getOrderNumber());
 
 
             ps.executeUpdate();
@@ -92,5 +93,30 @@ public class OrderRepository implements IOrderRepository {
 
 
 }
+
+
+    @Override
+    public List<Order> getAllOrders(int salesPersonId) {
+        List<Order> Order = new ArrayList<>();
+        Connection connection = SingletonConnection.getConnexion();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders where SalesPersonId = ? ");
+            ps.setInt(1,salesPersonId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order(rs.getInt("Id"),
+                        rs.getDate("Date").toLocalDate(),rs.getInt("OrderNumber"),
+                        rs.getInt("SalesPersonId"),rs.getInt("IsValid"));
+
+                Order.add(order);
+                System.out.println(order);
+                System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Order;
+    }
 
 }

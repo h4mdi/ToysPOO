@@ -1,19 +1,18 @@
 package Main.Model;
-
 import java.time.LocalDate;
 
 public class Order {
 
     private int id;
     private LocalDate date;
-    private String orderNumber;
+    private int orderNumber;
     private int salesPersonId;
     private int isValid;
 
     public Order() {
     }
 
-    public Order(int id, LocalDate date, String orderNumber, int salesPersonId, int isValid) {
+    public Order(int id, LocalDate date, int orderNumber, int salesPersonId, int isValid) {
         this.id = id;
         this.date = date;
         this.orderNumber = orderNumber;
@@ -37,11 +36,11 @@ public class Order {
         this.date = date;
     }
 
-    public String getOrderNumber() {
+    public int getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(String orderNumber) {
+    public void setOrderNumber(int orderNumber) {
         this.orderNumber = orderNumber;
     }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Main.Controllers.OrderDetailsController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <TableView fx:id="tableView" layoutX="31.0" layoutY="95.0" prefHeight="350.0" prefWidth="360.0" stylesheets="@tableViewAdmin.css">
+            <columns>
+                <TableColumn fx:id="id" prefWidth="66.0" resizable="false" text="Identifiant" />
+                <TableColumn fx:id="nom" minWidth="7.0" prefWidth="200.0" resizable="false" text="Nom" />
+                <TableColumn fx:id="prix" prefWidth="91.0" resizable="false" text="Prix" />
+
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </children>
+
+</AnchorPane>

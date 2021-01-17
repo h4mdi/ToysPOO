@@ -261,7 +261,7 @@ public class CashierController implements Initializable {
             Order order = new Order();
 //            order.setId();
             order.setDate(LocalDate.now());
-            order.setOrderNumber(String.valueOf(orderNumber));
+            order.setOrderNumber(orderNumber);
             order.setIsValid(1);
             order.setSalesPersonId(Session.getCurrentSession());
 //            System.out.println(Session.getCurrentSession());
@@ -274,6 +274,14 @@ public class CashierController implements Initializable {
 
     }
 
+    @FXML
+    public void OpenCashierSales(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/CashierSales.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
 
-
+        homeStage.show();
+    }
 }
