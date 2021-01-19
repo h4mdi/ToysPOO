@@ -7,6 +7,7 @@ import Main.Model.Order;
 import Main.Model.OrderDetails;
 import Main.Model.Toy;
 import com.itextpdf.text.*;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,7 +65,6 @@ public class OrderDetailsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Afficher();
 
     }
 
@@ -168,7 +170,7 @@ public class OrderDetailsController implements Initializable {
 ////
 ////        document.close();
 
-        Document document = new Document();
+        Document document = new Document(PageSize.A4);
         PdfPTable table = new PdfPTable(new float[] { 2, 1, 2 });
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell("Jouet");
@@ -185,7 +187,7 @@ public class OrderDetailsController implements Initializable {
             table.addCell(String.valueOf(orders.get(i).getQuantity()));
             table.addCell(String.valueOf(orders.get(i).getUnitPrice()));
         }
-        PdfWriter.getInstance(document, new FileOutputStream("Facture"+orders.get(0).getOrderNumber()+".pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/Factures/Facture"+orders.get(0).getOrderNumber()+".pdf"));
         document.open();
         Paragraph p1,header,num;
         header=new Paragraph("MBA&&CBYTE");
@@ -205,27 +207,16 @@ public class OrderDetailsController implements Initializable {
         document.add(table);
         String filename = "src/main/resources/images/cache.png";
         Image image = Image.getInstance(filename);
-        image.setAbsolutePosition(0f, 90f);
+        image.setAbsolutePosition(15f, 90f);
         document.add(image);
         document.close();
+        //ouvrir le pdf
+        Desktop.getDesktop().open(new File("src/main/resources/Factures/Facture"+orders.get(0).getOrderNumber()+".pdf"));
+
         System.out.println("Done");
     }
 
 
-    void Afficher() {
-
-        oblist = FXCollections.observableArrayList(o2);
-        System.out.println("liste");
-
-//        toy.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-
-//        qt.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-//        pu.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-
-        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
-//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
-
-    }
 
 
 
