@@ -100,7 +100,7 @@ public class OrderRepository implements IOrderRepository {
         List<Order> Order = new ArrayList<>();
         Connection connection = SingletonConnection.getConnexion();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders where SalesPersonId = ? ");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders where SalesPersonId = ? Group by orderNumber");
             ps.setInt(1,salesPersonId);
             ResultSet rs = ps.executeQuery();
 
@@ -112,6 +112,33 @@ public class OrderRepository implements IOrderRepository {
                 Order.add(order);
                 System.out.println(order);
                 System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Order;
+    }
+
+    @Override
+    public List<OrderDetails> getOrdersByNumber(int orderNumber) {
+        List<OrderDetails> Order = new ArrayList<>();
+        Connection connection = SingletonConnection.getConnexion();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orderdetails od " +
+                    "join toys t on t.id=od.totyId JOIN orders o on o.Id = od.orderID  where o.orderNumber = ? ");
+            ps.setInt(1,orderNumber);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDetails order = new OrderDetails(rs.getInt("OrderId"),
+                        rs.getString("t.Name"),
+                      rs.getInt("Quantity"),
+                        rs.getDouble("t.price"),rs.getInt("orderNumber"),
+                        rs.getDate("o.Date").toLocalDate());
+
+                Order.add(order);
+                System.out.println(order);
+                System.out.println("-----lista---------");
             }
         } catch (SQLException e) {
             e.printStackTrace();

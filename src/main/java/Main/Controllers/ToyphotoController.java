@@ -21,12 +21,12 @@ public class ToyphotoController implements Initializable {
    
     @FXML
     private ImageView idImg;
-    @FXML
-    private Label btn_exit;
-    @FXML
-    private void aaaa(MouseEvent event) {
-      System.exit(0);
-    }
+//    @FXML
+//    private Label btn_exit;
+//    @FXML
+//    private void aaaa(MouseEvent event) {
+//      System.exit(0);
+//    }
 
     private Toy toy;
     private static ToyphotoController instance;
@@ -39,14 +39,16 @@ public class ToyphotoController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
     }
-     public Toy getProduit() { return this.toy; }
+     public Toy getToy() { return this.toy; }
     
-    public void setProduit(Toy toy) {
+    public void setToy(Toy toy) {
         this.toy = toy;
         Image im = new Image(toy.getPhoto());
         idImg.setImage(im);
 
     }
+
+
   
    
     

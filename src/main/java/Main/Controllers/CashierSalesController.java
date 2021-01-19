@@ -5,6 +5,7 @@ import Main.DAO.Interfaces.IToyRepository;
 import Main.DAO.OrderRepository;
 import Main.DAO.ToyRepository;
 import Main.Model.Order;
+import Main.Model.OrderDetails;
 import Main.Model.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -134,7 +137,7 @@ public class CashierSalesController implements Initializable {
 
         // 2. Set the filter Predicate whenever the filter changes.
         nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(order -> newValue == null || newValue.isEmpty() || String.valueOf(order.getDate())
+            filteredData.setPredicate(order -> newValue == null || newValue.isEmpty() || String.valueOf(order.getOrderNumber())
                     .contains(newValue));
             changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
         });
@@ -187,17 +190,18 @@ public class CashierSalesController implements Initializable {
     public void ShowDetails(ActionEvent actionEvent) throws SQLException {
 
         FXMLLoader Loader = new FXMLLoader();
-        Loader.setLocation(getClass().getResource("/FXML/OrderDetails.fxml"));
+             Loader = new FXMLLoader(getClass().getResource("/FXML/OrderDetails.fxml"));
+
 
         try {
             Loader.load();
-//            Toy toy = new Toy();
-//            ToyRepository toyRepository = new ToyRepository();
-//            ToyphotoController toyphotoController = Loader.getController();
-//
-//            toy = toyRepository.getPhotos(tableView.getSelectionModel().getSelectedItem().getPhoto());
-//
-//            toyphotoController.setProduit(toy);
+            List<OrderDetails> orders ;
+            OrderDetailsController controller =  Loader.getController();
+
+            orders= orderRepository.getOrdersByNumber(tableView.getSelectionModel().getSelectedItem().getOrderNumber());
+            controller.setOrders(orders);
+            System.out.println(orders+"hahomma");
+
             Parent p = Loader.getRoot();
             Stage stage = new Stage();
             stage.setScene(new Scene(p));
@@ -206,4 +210,6 @@ public class CashierSalesController implements Initializable {
             ex.printStackTrace();
         }
     }
+
+
 }

@@ -223,7 +223,7 @@ public class ToyController implements Initializable {
 
             toy = toyRepository.getPhotos(tableView.getSelectionModel().getSelectedItem().getPhoto());
 
-            toyphotoController.setProduit(toy);
+            toyphotoController.setToy(toy);
             Parent p = Loader.getRoot();
             Stage stage = new Stage();
             stage.setScene(new Scene(p));

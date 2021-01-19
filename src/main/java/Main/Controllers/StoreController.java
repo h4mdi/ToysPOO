@@ -1,7 +1,6 @@
 package Main.Controllers;
 
 import Main.DAO.Interfaces.IToyRepository;
-import Main.DAO.SingletonConnection;
 import Main.DAO.ToyRepository;
 import Main.Model.Toy;
 import javafx.beans.binding.Bindings;
@@ -9,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,19 +18,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Optional;
@@ -127,7 +118,7 @@ public class StoreController implements Initializable {
 
                     toy = toyRepository.getPhotos(tableView.getSelectionModel().getSelectedItem().getPhoto());
 
-                    toyphotoController.setProduit(toy);
+                    toyphotoController.setToy(toy);
                     Parent p = Loader.getRoot();
                     Stage stage = new Stage();
                     stage.setScene(new Scene(p));

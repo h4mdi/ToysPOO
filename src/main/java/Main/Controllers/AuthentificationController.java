@@ -71,7 +71,8 @@ public class AuthentificationController implements IMetier{
             ResultSet resultSet = ps.executeQuery();
             User u = new User();
 
-            while (resultSet.next()) {
+
+            if (resultSet.next()) {
                 u.setLogin(resultSet.getString("u.Login"));
                 u.setId(resultSet.getInt("u.Id"));
                 u.setPassword(resultSet.getString("u.Password"));
@@ -89,7 +90,7 @@ public class AuthentificationController implements IMetier{
                     homeStage.show();
 
 
-                } else if (u.getIsAdmin()== 0) {
+                } else if (u.getIsAdmin() == 0) {
                     infoBox("Connexion effectuée avec succès!", null, "Succès de connexion");
                     Parent parent = FXMLLoader.load(getClass().getResource("/FXML/cashier.fxml"));
 
@@ -105,7 +106,8 @@ public class AuthentificationController implements IMetier{
 
                 }
             }
-            if(!resultSet.next()){
+
+            else  {
 
                 infoBox("Veuillez vérifier votre login et mot de passe", null, "Erreur de connexion");
 
