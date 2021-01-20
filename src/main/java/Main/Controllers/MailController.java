@@ -67,48 +67,6 @@ public class MailController implements Initializable {
 
 
 
-    public void logout(ActionEvent actionEvent) throws IOException {
-        ButtonType yes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", yes, no);
-
-        alert.setTitle("Confimer la déconnection");
-        alert.setHeaderText("Voulez vous vraimenet déconnecter ?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == yes) {
-            Parent parent = FXMLLoader.load(getClass().getResource("/FXML/login.fxml"));
-            Scene scene = new Scene(parent);
-            Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            homeStage.setScene(scene);
-            homeStage.centerOnScreen();
-
-            homeStage.show();
-        } else {
-            alert.close();
-        } }
-
-    public void OpenJouet(ActionEvent actionEvent) throws IOException{
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Toys.fxml"));
-        Scene scene = new Scene(parent);
-        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        homeStage.setScene(scene);
-        homeStage.centerOnScreen();
-
-        homeStage.show();
-    }
-
-    public void OpenFournisseur(ActionEvent actionEvent) throws IOException{
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Vendor.fxml"));
-        Scene scene = new Scene(parent);
-        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        homeStage.setScene(scene);
-        homeStage.centerOnScreen();
-
-        homeStage.show();
-    }
-
-
 
 
 
@@ -167,6 +125,120 @@ public class MailController implements Initializable {
         tableView.setItems(sortedData);
 
     }
+
+
+       /* ================ /*
+  * Sidebar Menu *
+   ==================*/
+
+
+    @FXML
+    public void OpenHome(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
+    @FXML
+    public void OpenJouet(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Toys.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
+    @FXML
+    public void OpenFournisseur(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Vendor.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
+    @FXML
+    public void OpenVentes(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
+    }
+
+    @FXML
+    public void openstats(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
+    }
+
+    @FXML
+    public void OpenUsers(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
+    }
+
+
+
+    @FXML
+    public void OpenMaillist(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Maillist.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
+    @FXML
+    public void logout(ActionEvent actionEvent) throws IOException {
+        ButtonType yes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", yes, no);
+
+        alert.setTitle("Confimer la déconnection");
+        alert.setHeaderText("Voulez vous vraimenet déconnecter ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == yes) {
+            Parent parent = FXMLLoader.load(getClass().getResource("/FXML/login.fxml"));
+            Scene scene = new Scene(parent);
+            Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            homeStage.setScene(scene);
+            homeStage.centerOnScreen();
+
+            homeStage.show();
+        } else {
+            alert.close();
+        } }
+
+
 
 
 }

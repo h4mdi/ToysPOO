@@ -199,16 +199,23 @@ DatePicker endDatepicker ;
 //        hardWorker.setText(String.valueOf(toyRepository.GetMaxSalesByPerson(startDate,endDate).get(0).getId()));
 //    }
 
+   /* ================ /*
+  * Sidebar Menu *
+   ==================*/
 
 
-/* ================ /*
-*  sideBar Links *
-==================*/
+    @FXML
+    public void OpenHome(ActionEvent actionEvent) throws IOException {
 
-    //Accueil
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
 
+        homeStage.show();
+    }
 
-    //Gestion jouets
     @FXML
     public void OpenJouet(ActionEvent actionEvent) throws IOException {
 
@@ -221,11 +228,29 @@ DatePicker endDatepicker ;
         homeStage.show();
     }
 
-    //Gestion des fournisseurs
+    @FXML
+    public void OpenFournisseur(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Vendor.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
 
-    //Gestion des ventes
+        homeStage.show();
+    }
 
-    //Statistiques
+    @FXML
+    public void OpenVentes(ActionEvent actionEvent) throws IOException {
+
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
+    }
+
     @FXML
     public void openstats(ActionEvent actionEvent) throws IOException {
 
@@ -238,23 +263,42 @@ DatePicker endDatepicker ;
         statsStage.show();
     }
 
-    //Gestion des utilisateurs
+    @FXML
+    public void OpenUsers(ActionEvent actionEvent) throws IOException {
 
-    //Maillist
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Scene scene = new Scene(parent);
+        Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        statsStage.setScene(scene);
+        statsStage.centerOnScreen();
+
+        statsStage.show();
+    }
 
 
-    //Se déconnecter
+
+    @FXML
+    public void OpenMaillist(ActionEvent actionEvent) throws IOException{
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Maillist.fxml"));
+        Scene scene = new Scene(parent);
+        Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        homeStage.setScene(scene);
+        homeStage.centerOnScreen();
+
+        homeStage.show();
+    }
+
     @FXML
     public void logout(ActionEvent actionEvent) throws IOException {
         ButtonType yes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"",yes,no);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", yes, no);
 
         alert.setTitle("Confimer la déconnection");
         alert.setHeaderText("Voulez vous vraimenet déconnecter ?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == yes ){
+        if (result.get() == yes) {
             Parent parent = FXMLLoader.load(getClass().getResource("/FXML/login.fxml"));
             Scene scene = new Scene(parent);
             Stage homeStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -263,11 +307,10 @@ DatePicker endDatepicker ;
 
             homeStage.show();
         } else {
-            alert.close();        }
+            alert.close();
+        } }
 
 
-
-    }
 
 }
 
