@@ -7,5 +7,6 @@ import java.util.List;
 public interface ImailRepository {
     public void addType(Mailinglist mailinglist);
     public List<Mailinglist> getAllMails();
+    public int GetTotalSubs() ;
 
 }

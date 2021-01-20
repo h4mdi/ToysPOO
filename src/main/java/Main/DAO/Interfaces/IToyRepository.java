@@ -21,5 +21,6 @@ public interface IToyRepository extends IRepository<Toy> {
     public List<SalesByToy> GetSalesByToy(Date startDate, Date endDat);
 
     public Toy getToy() ;
+    public int GetTotaltoys();
 
 }

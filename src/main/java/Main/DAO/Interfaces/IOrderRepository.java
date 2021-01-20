@@ -14,4 +14,5 @@ public interface IOrderRepository extends IRepository<Toy>
 public int getLastOrderNumber() ;
     public List<Order> getAllOrders(int salesPersonId) ;
     public List<OrderDetails> getOrdersByNumber(int orderNumber);
-}
+    public int GetTotalOrders() ;
+    }

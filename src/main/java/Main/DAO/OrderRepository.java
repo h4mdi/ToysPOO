@@ -146,4 +146,21 @@ public class OrderRepository implements IOrderRepository {
         return Order;
     }
 
+    @Override
+    public int GetTotalOrders() {
+        int nborders =0 ;
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT count(*) as total from orders o group by o.orderNumber ");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nborders=rs.getInt("total") ;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nborders;    }
+
 }

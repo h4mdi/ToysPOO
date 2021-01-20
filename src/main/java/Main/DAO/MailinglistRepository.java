@@ -12,10 +12,10 @@ import java.util.List;
 
 public class MailinglistRepository implements ImailRepository {
 
+    Connection connection = SingletonConnection.getConnexion();
 
     @Override
     public void addType(Mailinglist mailinglist) {
-        Connection connection = SingletonConnection.getConnexion();
 
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO mailinglist(Email) " +
@@ -54,4 +54,21 @@ public class MailinglistRepository implements ImailRepository {
         }
         return maillist;
     }
+
+    @Override
+    public int GetTotalSubs() {
+        int nbsubs =0 ;
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT count(*) as total from mailinglist ");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nbsubs=rs.getInt("total") ;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nbsubs;    }
 }

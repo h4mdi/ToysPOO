@@ -120,7 +120,7 @@ public class ToyController implements Initializable {
     private Button btn_delToy ;
     ObservableList<Toy> oblist ;
 
-    IToyRepository toyRepository = new ToyRepository();
+    ToyRepository toyRepository = new ToyRepository();
     private String absolutePathPhoto;
 
 

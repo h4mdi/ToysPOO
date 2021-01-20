@@ -1,6 +1,7 @@
 package Main.Controllers;
 
-import Main.DAO.SingletonConnection;
+import Main.DAO.*;
+import Main.Model.Session;
 import Main.Model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,48 +24,39 @@ import java.util.ResourceBundle;
 
 public class AdminController implements Initializable {
 
-
-
-    @FXML
-    private TableView<User> tableView;
-
+@FXML private Label hello;
 
     @FXML
-    private TableColumn<User,String> login;
+    private Label nbtoys ;
     @FXML
-    private TableColumn<User,String> password;
+    private Label nborders ;
 
     @FXML
-    private TableColumn<User,Integer> id;
+    private Label nbvendors ;
+    @FXML
+    private Label nbusers ;
+    @FXML
+    private Label nbsubs ;
 
     @FXML
-    private Button btnJouets;
+    private Label nbsum ;
 
-    ObservableList<User> oblist = FXCollections.observableArrayList();
+    ToyRepository toyRepository = new ToyRepository();
+    OrderRepository orderRepository = new OrderRepository();
+    VendorRepository vendorRepository = new VendorRepository();
+    MailinglistRepository mailinglistRepository = new MailinglistRepository();
+    UsersRepository usersRepository = new UsersRepository();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        nbtoys.setText(String.valueOf(toyRepository.GetTotaltoys()));
+        nborders.setText(String.valueOf(orderRepository.GetTotalOrders()));
+        nbvendors.setText(String.valueOf(vendorRepository.GetTotalVendors()));
+        nbsubs.setText(String.valueOf(mailinglistRepository.GetTotalSubs()));
+        nbusers.setText(String.valueOf(usersRepository.GetTotalUsers()));
+        nbsum.setText(String.valueOf(toyRepository.GetTotalSales(null,null).toString().replace("[", "").replace("]", "" ))+" TND");
 
-        Connection connection = SingletonConnection.getConnexion();
-
-
-            try {
-                PreparedStatement ps = connection.prepareStatement("SELECT * FROM users ");
-                ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-//                oblist.add(new User(rs.getString("login"),rs.getString("password"),rs.getInt("id")));
-
-
-
-            }
-
-        } catch (SQLException e) {
-
-        }
-
-        login.setCellValueFactory(new PropertyValueFactory<>("login"));
-        password.setCellValueFactory(new PropertyValueFactory<>("password"));
-        tableView.setItems(oblist);
     }
 
 
@@ -156,6 +148,8 @@ public class AdminController implements Initializable {
 
         homeStage.show();
     }
+
+
 
 }
 

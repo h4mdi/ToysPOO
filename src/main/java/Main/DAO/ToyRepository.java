@@ -307,4 +307,21 @@ public class ToyRepository implements IToyRepository {
         }
 
         return totalSalesList;    }
+
+    @Override
+    public int GetTotaltoys() {
+        int nbtoys =0 ;
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT count(*) as total from toys ");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+              nbtoys=rs.getInt("total") ;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nbtoys;    }
 }

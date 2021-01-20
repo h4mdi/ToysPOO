@@ -95,4 +95,21 @@ public class VendorRepository implements IVendorRepository {
     public void update(Vendor entity) {
 
     }
+
+    @Override
+    public int GetTotalVendors() {
+        int nbvendors =0 ;
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT count(*) as total from vendors ");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                nbvendors=rs.getInt("total") ;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nbvendors;    }
 }
