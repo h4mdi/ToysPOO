@@ -232,7 +232,7 @@
                                              </font>
                                           </Label>
                                           <TextField fx:id="insert_name" layoutX="354.0" layoutY="144.0" prefHeight="32.0" prefWidth="227.0" />
-                                          <TextField fx:id="aj_adre" layoutX="355.0" layoutY="190.0" prefHeight="33.0" prefWidth="227.0" />
+                                          <TextField fx:id="insert_adress" layoutX="355.0" layoutY="190.0" prefHeight="33.0" prefWidth="227.0" />
                                           <Label layoutX="171.0" layoutY="28.0" text="Ajouter un fournisseur">
                                              <font>
                                                 <Font size="34.0" />
@@ -244,13 +244,13 @@
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="aj_mail" layoutX="355.0" layoutY="242.0" prefHeight="33.0" prefWidth="226.0" />
+                                          <TextField fx:id="insert_email" layoutX="355.0" layoutY="242.0" prefHeight="33.0" prefWidth="226.0" />
                                           <Label layoutX="148.0" layoutY="297.0" prefHeight="32.0" prefWidth="113.0" text="Facebook :">
                                              <font>
                                                 <Font name="Montserrat Medium Italic" size="22.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="aj_fac" layoutX="354.0" layoutY="296.0" prefHeight="33.0" prefWidth="226.0">
+                                          <TextField fx:id="insert_facebook" layoutX="354.0" layoutY="296.0" prefHeight="33.0" prefWidth="226.0">
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>

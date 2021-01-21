@@ -24,6 +24,29 @@ public class UsersRepository implements IUserRepository{
     @Override
     public void addUser(User user) {
 
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO users(Id,Login,Password,Email,PhotoPath,Phone,FacebookUrl,SIN,IsAdmin) " +
+                    "VALUES (? , ? ,? ,? ,? ,? ,? ,? , ?)") ;
+            ps.setInt(1,user.getId());
+            ps.setString(2,user.getLogin());
+            ps.setString(3,user.getPassword());
+            ps.setString(4,user.getEmail());
+            ps.setString(5,user.getPhoto());
+            ps.setString(6,user.getPhone());
+            ps.setString(7,user.getFacebook());
+            ps.setString(8,user.getSin());
+            ps.setInt(9,user.getIsAdmin());
+
+            ps.executeUpdate();
+
+            System.out.println("Utilisateur ajouté");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("error");
+
+        }
+
     }
 
     @Override

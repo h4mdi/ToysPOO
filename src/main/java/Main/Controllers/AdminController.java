@@ -127,7 +127,7 @@ public class AdminController implements Initializable {
     @FXML
     public void openUsers(ActionEvent actionEvent) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/User.fxml"));
         Scene scene = new Scene(parent);
         Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         statsStage.setScene(scene);
