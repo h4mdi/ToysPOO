@@ -13,6 +13,7 @@ public interface IOrderRepository extends IRepository<Toy>
 //    void AddOrderDetails(Order order, Toy toy);
 public int getLastOrderNumber() ;
     public List<Order> getAllOrders(int salesPersonId) ;
+    public List<Order> getAllOrdersAdmin() ;
     public List<OrderDetails> getOrdersByNumber(int orderNumber);
     public int GetTotalOrders() ;
     }

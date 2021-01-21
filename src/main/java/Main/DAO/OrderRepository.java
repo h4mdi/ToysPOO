@@ -120,6 +120,29 @@ public class OrderRepository implements IOrderRepository {
     }
 
     @Override
+    public List<Order> getAllOrdersAdmin() {
+        List<Order> Order = new ArrayList<>();
+        Connection connection = SingletonConnection.getConnexion();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order(rs.getInt("Id"),
+                        rs.getDate("Date").toLocalDate(),rs.getInt("OrderNumber"),
+                        rs.getInt("SalesPersonId"),rs.getInt("IsValid"));
+
+                Order.add(order);
+                System.out.println(order);
+                System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Order;
+    }
+
+    @Override
     public List<OrderDetails> getOrdersByNumber(int orderNumber) {
         List<OrderDetails> Order = new ArrayList<>();
         Connection connection = SingletonConnection.getConnexion();

@@ -281,7 +281,7 @@ public class VendorController implements Initializable {
     @FXML
     public void OpenVentes(ActionEvent actionEvent) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Sales.fxml"));
         Scene scene = new Scene(parent);
         Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         statsStage.setScene(scene);

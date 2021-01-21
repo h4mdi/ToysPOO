@@ -1,8 +1,11 @@
 package Main.Controllers;
 
-import Main.DAO.Interfaces.ImailRepository;
-import Main.DAO.MailinglistRepository;
-import Main.Model.Mailinglist;
+import Main.DAO.Interfaces.IOrderRepository;
+import Main.DAO.Interfaces.IToyRepository;
+import Main.DAO.OrderRepository;
+import Main.DAO.ToyRepository;
+import Main.Model.Order;
+import Main.Model.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,79 +23,93 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static javafx.collections.FXCollections.observableArrayList;
-
-public class MailController implements Initializable {
-
+public class SalesController implements Initializable {
 
     @FXML
     private TabPane tab;
 
 
+    String choix = "";
 
     @FXML
     private TextField nameFilter;
 
+    @FXML TextField total ;
 
     @FXML
     private Pagination pagination;
-    private FilteredList<Mailinglist> filteredData;
+    private FilteredList<Order> filteredData;
 
     private static final int ROWS_PER_PAGE = 7;
     @FXML
-    private TableView<Mailinglist> tableView;
+    private TableView<Order> tableView;
+
+//    @FXML
+//    private TableView<Toy> OrderList;
 
 
     @FXML
-    private TableColumn<Mailinglist, String> Email;
+    private TableColumn<Order, Integer> id;
+    @FXML
+    private TableColumn<Order, LocalDate> date;
+    @FXML
+    private TableColumn<Order, Integer> numordre;
 
+    //
+//    @FXML
+//    private TableColumn<Toy, Integer> idP;
+//    @FXML
+//    private TableColumn<Toy, String> nomP;
+//    @FXML
+//    private TableColumn<Toy, Double> prixP;
+//
+//    @FXML
+//    private Button btn_afficherPhoto;
+//    @FXML
+//    private Button btn_addToy;
+//    @FXML
+//    private Button btn_updateToy;
+    ObservableList<Order> oblist ;
 
-    ObservableList<Mailinglist> oblist ;
-
-
-    ImailRepository mailRepository = new MailinglistRepository();
-
-
+    IToyRepository toyRepository = new ToyRepository();
+    IOrderRepository orderRepository = new OrderRepository();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Afficher();
-        tableView.setItems(FXCollections.observableArrayList(mailRepository.getAllMails()));
 
+        try {
+            Afficher();
+            tableView.setItems(FXCollections.observableArrayList(orderRepository.getAllOrdersAdmin()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    void Afficher() throws Exception {
 
+        oblist = FXCollections.observableArrayList(orderRepository.getAllOrdersAdmin());
 
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-
-
-
-
-
-
-
-
-    void Afficher() {
-
-        oblist = observableArrayList(mailRepository.getAllMails());
-
-        Email.setCellValueFactory(new PropertyValueFactory<>("mail"));
-
-
+        date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        numordre.setCellValueFactory(new PropertyValueFactory<>("OrderNumber"));
 
 
         filteredData = new FilteredList<>(oblist, b -> true);
 
         // 2. Set the filter Predicate whenever the filter changes.
         nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(mailinglist -> newValue == null || newValue.isEmpty() || mailinglist.getMail().toLowerCase()
-                    .contains(newValue.toLowerCase()));
+            filteredData.setPredicate(order -> newValue == null || newValue.isEmpty() || String.valueOf(order.getOrderNumber())
+                    .contains(newValue));
             changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
         });
         pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
+
 
 
         int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
@@ -106,11 +123,10 @@ public class MailController implements Initializable {
     }
 
     // actualiser la liste aprés chaque opération
-    public void refresh(){
+    public void refresh() throws Exception {
         oblist.clear();
         Afficher();
     }
-
 
     private void changeTableView(int index, int limit) {
 
@@ -118,18 +134,14 @@ public class MailController implements Initializable {
         int toIndex = Math.min(fromIndex + limit, oblist.size());
 
         int minIndex = Math.min(toIndex, filteredData.size());
-        SortedList<Mailinglist> sortedData = new SortedList<>(
-                observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
+        SortedList<Order> sortedData = new SortedList<>(
+                FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedData);
 
     }
 
-
-       /* ================ /*
-  * Sidebar Menu *
-   ==================*/
 
 
     @FXML
@@ -170,7 +182,7 @@ public class MailController implements Initializable {
     @FXML
     public void OpenVentes(ActionEvent actionEvent) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Sales.fxml"));
         Scene scene = new Scene(parent);
         Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         statsStage.setScene(scene);
@@ -194,7 +206,7 @@ public class MailController implements Initializable {
     @FXML
     public void OpenUsers(ActionEvent actionEvent) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Sales.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Stats.fxml"));
         Scene scene = new Scene(parent);
         Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         statsStage.setScene(scene);
@@ -237,8 +249,6 @@ public class MailController implements Initializable {
         } else {
             alert.close();
         } }
-
-
 
 
 }

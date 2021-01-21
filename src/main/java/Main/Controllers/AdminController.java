@@ -103,7 +103,7 @@ public class AdminController implements Initializable {
     @FXML
     public void openVentes(ActionEvent actionEvent) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource(""));
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Sales.fxml"));
         Scene scene = new Scene(parent);
         Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         statsStage.setScene(scene);
