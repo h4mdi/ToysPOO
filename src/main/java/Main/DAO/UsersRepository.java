@@ -2,6 +2,7 @@ package Main.DAO;
 
 import Main.DAO.Interfaces.IUserRepository;
 import Main.DAO.Interfaces.IVendorRepository;
+import Main.Model.Toy;
 import Main.Model.User;
 import Main.Model.Vendor;
 
@@ -18,9 +19,27 @@ public class UsersRepository implements IUserRepository{
 
     @Override
     public List<User> getAllUsers() {
-        return null;
-    }
+        List<User> Userlist = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM users");
+            ResultSet rs = ps.executeQuery();
 
+            while (rs.next()) {
+                User user = new User(rs.getInt("Id"),
+                        rs.getString("Login"), rs.getString("Password")
+                        , rs.getString("Email"), rs.getString("PhotoPath"),
+//                        rs.getString("v.Name"),
+                        rs.getString("Phone"),
+                        rs.getString("FacebookUrl"), rs.getString("SIN"),
+                        rs.getInt("IsAdmin"));
+
+                Userlist.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Userlist;
+    }
     @Override
     public void addUser(User user) {
 
