@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 public class OrderDetailsController implements Initializable {
     ObservableList<OrderDetails> oblist ;
     OrderRepository orderRepository = new OrderRepository();
-
+Double s =0.0 ;
 
     @FXML
     private TableView<OrderDetails> tableView;
@@ -117,10 +117,11 @@ public class OrderDetailsController implements Initializable {
             table.addCell(orders.get(i).getName());
             table.addCell(String.valueOf(orders.get(i).getQuantity()));
             table.addCell(String.valueOf(orders.get(i).getUnitPrice()));
+            s=s+orders.get(i).getUnitPrice();
         }
         PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/Factures/Facture"+orders.get(0).getOrderNumber()+".pdf"));
         document.open();
-        Paragraph p1,header,num;
+        Paragraph p1,p2,header,num;
         header=new Paragraph("MBA&&CBYTE");
         header.setAlignment(Element.ALIGN_CENTER);
         num = new Paragraph("Facture commande N° "+orders.get(0).getOrderNumber());
@@ -140,6 +141,10 @@ public class OrderDetailsController implements Initializable {
         Image image = Image.getInstance(filename);
         image.setAbsolutePosition(15f, 90f);
         document.add(image);
+        p2 = new Paragraph("Total TTC :"+s+" TND");
+        p2.setAlignment(Element.ALIGN_RIGHT);
+        document.add(p2);
+
         document.close();
         //ouvrir le pdf
         Desktop.getDesktop().open(new File("src/main/resources/Factures/Facture"+orders.get(0).getOrderNumber()+".pdf"));
