@@ -69,6 +69,40 @@ public class UsersRepository implements IUserRepository{
     }
 
     @Override
+    public void deleteUser(int id) {
+        try {
+
+            PreparedStatement st = connection.prepareStatement("DELETE FROM users where Id = ?");
+            st.setInt(1, id);
+            st.executeUpdate();
+            System.out.println("c'est bon");
+
+        } catch (SQLException e) {
+            System.out.println("erreur");
+        }
+    }
+
+    @Override
+    public void editUser(User user) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE users SET Login=? , Password= ?, Email= ?, PhotoPath= ?, Phone= ?, FacebookUrl= ?, SIN= ? where Id= ?");
+            ps.setInt(8,user.getId());
+            ps.setString(1,user.getLogin());
+            ps.setString(2,user.getPassword());
+            ps.setString(3,user.getEmail());
+            ps.setString(4,user.getPhoto());
+            ps.setString(5,user.getPhone());
+            ps.setString(6,user.getFacebook());
+            ps.setString(7,user.getSin());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Override
     public int GetTotalUsers() {
 
         int nbusers =0 ;
@@ -112,4 +146,21 @@ public class UsersRepository implements IUserRepository{
     public void update(User entity) {
 
     }
+
+    @Override
+    public User getPhotos(String path)throws SQLException {
+        String req = "Select * from users t where t.PhotoPath = ?";
+        PreparedStatement st = connection.prepareStatement(req);
+        st.setString(1, path);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            User obj = new User();
+            obj.setId(rs.getInt("id"));
+
+            obj.setPhoto(rs.getString("PhotoPath"));
+            System.out.println("path :" + obj.getPhoto());
+            return obj;
+        }
+        return null;    }
+
 }
