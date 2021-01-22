@@ -320,7 +320,7 @@ public class UserController implements Initializable {
 
     public void SaveAddUser(ActionEvent actionEvent) {
         deplacerVers(User_photo, absolutePathPhoto,"C:\\Users\\hp\\Sesame\\3Java_Sesame\\Projet_POO_mvn_fin\\src\\main\\resources\\toysphoto");
-        deplacerVers(User_photo, absolutePathPhoto,"C:\\wamp64\\www\\toys\\photos");
+        deplacerVers(User_photo, absolutePathPhoto,"C:\\wamp64\\www\\toys\\userphotos");
         User user = new User() ;
 
         user.setLogin(insert_name.getText());
@@ -332,6 +332,7 @@ public class UserController implements Initializable {
         user.setPhone(insert_tel.getText());
         user.setFacebook(insert_fb.getText());
         user.setIsAdmin(0);
+
 
 
 
@@ -356,7 +357,7 @@ public class UserController implements Initializable {
 
         }
 
-        else {  userRepository.add(user);
+        else {  userRepository.addUser(user);
             Afficher();
             insert_name.setText("");
             insert_name.setText("");
