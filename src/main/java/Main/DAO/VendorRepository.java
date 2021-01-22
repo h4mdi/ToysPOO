@@ -39,7 +39,7 @@ public class VendorRepository implements IVendorRepository {
     @Override
     public void addVendors(Vendor Vendor) {
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Vendors(Id,Name,address,email,FacebookUrl) " +
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Vendors(Id, Name,Address,Email,FacebookUrl) " +
                     "VALUES (? , ? ,? ,? ,?)") ;
             ps.setInt(1,Vendor.getId());
             ps.setString(2,Vendor.getName());
@@ -58,6 +58,40 @@ public class VendorRepository implements IVendorRepository {
             System.out.println("error");
 
         }
+    }
+
+    @Override
+    public void deleteVendor(int id) {
+        try {
+
+            PreparedStatement st = connection.prepareStatement("DELETE FROM vendors where Id = ?");
+            st.setInt(1, id);
+            st.executeUpdate();
+            System.out.println("c'est bon");
+
+        } catch (SQLException e) {
+            System.out.println("erreur");
+        }
+    }
+
+    @Override
+    public void editVendor(Vendor vendor) {
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE vendors SET Name=? , Email= ?, Address= ?, FacebookUrl= ? where Id= ?");
+            ps.setInt(5,vendor.getId());
+            ps.setString(1,vendor.getName());
+            ps.setString(2,vendor.getEmail());
+            ps.setString(3,vendor.getAddress());
+            ps.setString(4,vendor.getFacebook());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
     }
 
     public void SaveAddToy(Vendor Vendor) {

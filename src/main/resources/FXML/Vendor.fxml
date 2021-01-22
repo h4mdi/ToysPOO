@@ -176,7 +176,7 @@
                                                 </TableView>
                                                 <Pagination fx:id="pagination" layoutX="227.0" layoutY="457.0" prefHeight="27.0" prefWidth="347.0" />
                                                 <Button fx:id="btn_addToy" layoutX="116.0" layoutY="501.0" mnemonicParsing="false" onAction="#show_addForm" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Ajouter Fournisseur" />
-                                                <Button fx:id="btn_suppProd" layoutX="305.0" layoutY="501.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="136.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Supprimer Fournisseur" />
+                                                <Button fx:id="btn_suppProd" layoutX="305.0" layoutY="501.0" mnemonicParsing="false" onAction="#delete_Vendor" prefHeight="36.0" prefWidth="136.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Supprimer Fournisseur" />
                                                 <Button fx:id="btn_updateToy" layoutX="491.0" layoutY="501.0" mnemonicParsing="false" onAction="#show_updateForm" prefHeight="36.0" prefWidth="130.0" style="-fx-background-color: #666;" stylesheets="@style2.css" text="Modifier Fournisseur" />
                                                 <TextField fx:id="nameFilter" layoutX="56.0" layoutY="4.0" prefHeight="27.0" prefWidth="541.0" promptText="chercher un fournisseur" style="-fx-background-color: FFFFFF; -fx-border-color: #B7C3D7;" />
                                                 <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="568.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">

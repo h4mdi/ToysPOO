@@ -2,8 +2,10 @@ package Main.Controllers;
 
 import Main.DAO.Interfaces.IVendorRepository;
 import Main.DAO.ToyRepository;
+import Main.DAO.UsersRepository;
 import Main.DAO.VendorRepository;
 import Main.Model.Toy;
+import Main.Model.User;
 import Main.Model.Vendor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,7 +45,7 @@ public class VendorController implements Initializable {
     private Pagination pagination;
     private FilteredList<Vendor> filteredData;
 
-    private static final int ROWS_PER_PAGE = 4;
+    private static final int ROWS_PER_PAGE = 7;
     @FXML
     private TableView<Vendor> tableView;
 
@@ -71,13 +73,13 @@ public class VendorController implements Initializable {
     private TextField update_price;
 
     @FXML
-    private TextField update_stock;
+    private TextField m_f_nom;
     @FXML
-    private TextField update_picture;
+    private TextField m_f_adr;
     @FXML
-    private TextField update_min;
+    private TextField m_f_mail;
     @FXML
-    private TextField update_max;
+    private TextField m_f_fac;
     @FXML
     private Button PhotoUpload;
     @FXML
@@ -146,6 +148,10 @@ public class VendorController implements Initializable {
 
 
     }
+    public void refresh(){
+        oblist.clear();
+        Afficher();
+    }
 
     private void changeTableView(int index, int limit) {
 
@@ -173,9 +179,10 @@ public class VendorController implements Initializable {
 
         vendor.setName(insert_name.getText());
         vendor.setEmail(insert_email.getText());
-        vendor.setEmail(insert_adress.getText());
-        vendor.setEmail(insert_facebook.getText());
+        vendor.setAddress(insert_adress.getText());
+        vendor.setFacebook(insert_facebook.getText());
 
+        System.out.println(insert_facebook.getText());
 
         if (insert_name.getText().equals("") || insert_adress.getText().equals("") ||
                 insert_facebook.getText().equals("") || insert_email.getText().equals("")) {
@@ -185,7 +192,7 @@ public class VendorController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 tab.getSelectionModel().select(1);
-                //Afficher();
+                Afficher();
                 insert_name.setText("");
                 insert_adress.setText("");
                 insert_facebook.setText("");
@@ -195,7 +202,7 @@ public class VendorController implements Initializable {
 
         } else {
             VendorRepository.addVendors(vendor);
-            //Afficher();
+            Afficher();
             insert_name.setText("");
             insert_adress.setText("");
             insert_facebook.setText("");
@@ -210,17 +217,59 @@ public class VendorController implements Initializable {
     private void show_updateForm(ActionEvent event) {
 
 
-        //prenom.setText(utilisateur.getSelectionModel().getSelectedItem().getPrenom());
+        m_f_nom.setText(tableView.getSelectionModel().getSelectedItem().getName());
+        m_f_adr.setText(tableView.getSelectionModel().getSelectedItem().getAddress());
+        m_f_mail.setText(tableView.getSelectionModel().getSelectedItem().getEmail());
+        m_f_fac.setText(tableView.getSelectionModel().getSelectedItem().getFacebook());
 
-        // valider.setVisible(false);
-//        btn_suppProd.setVisible(true);
-        //  modifier.setVisible(false);
-        //annuler.setVisible(false);
-        // ajouter.setVisible(true);
+
+        tab.getSelectionModel().select(2);
     }
 
     @FXML
     private void save_Update(ActionEvent event) {
+
+        Vendor vendor = new Vendor() ;
+
+        vendor.setId(tableView.getSelectionModel().getSelectedItem().getId());
+        vendor.setName(m_f_nom.getText());
+        vendor.setEmail(m_f_mail.getText()); ;//type
+        vendor.setAddress(m_f_adr.getText()); ;
+        vendor.setFacebook(m_f_fac.getText());
+
+
+
+
+
+        if (m_f_nom.getText().equals("") || m_f_mail.getText().equals("") ||  m_f_adr.getText()==null ||
+                m_f_fac.getText()==null   ) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Alerte");
+            alert.setHeaderText("Vous devez remplir TOUT LES CHAMPS SVP");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                tab.getSelectionModel().select(2);
+                Afficher();
+                m_f_nom.setText("");
+                m_f_mail.setText("");
+                m_f_adr.setText("");
+                m_f_fac.setText("");
+
+
+            }
+
+        }
+
+        else {  VendorRepository.editVendor(vendor);
+            Afficher();
+            m_f_nom.setText("");
+            m_f_mail.setText("");
+            m_f_adr.setText("");
+            m_f_fac.setText("");
+            tab.getSelectionModel().select(0);
+
+
+        }
 
 
     }
@@ -350,6 +399,23 @@ public class VendorController implements Initializable {
         } }
 
 
+    public void delete_Vendor(ActionEvent actionEvent) {
+        if (!tableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Suppression d'un utilisateur");
+            alert.setHeaderText("Etes-vous sur de vouloir supprimer l'utilisateur "
+                    + tableView.getSelectionModel().getSelectedItem().getName() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                VendorRepository vendorRepository = new VendorRepository();
+                System.out.println("aywah"+tableView.getSelectionModel().getSelectedItem().getId());
+                vendorRepository.deleteVendor(tableView.getSelectionModel().getSelectedItem().getId());
+                refresh();
+
+            }
+
+        }
+    }
 }
 
 
