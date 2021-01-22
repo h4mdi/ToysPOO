@@ -194,7 +194,7 @@ public class MailController implements Initializable {
     @FXML
     public void OpenUsers(ActionEvent actionEvent) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Sales.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/FXML/User.fxml"));
         Scene scene = new Scene(parent);
         Stage statsStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         statsStage.setScene(scene);
