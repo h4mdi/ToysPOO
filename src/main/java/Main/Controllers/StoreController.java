@@ -1,6 +1,7 @@
 package Main.Controllers;
 
 import Main.DAO.Interfaces.IToyRepository;
+import Main.DAO.MailinglistRepository;
 import Main.DAO.ToyRepository;
 import Main.Model.Toy;
 import javafx.beans.binding.Bindings;
@@ -36,6 +37,8 @@ public class StoreController implements Initializable {
     @FXML
     private ComboBox prixFilter;
     @FXML
+    private ComboBox typeFilter;
+    @FXML
     private TableView<Toy> tableView;
     String choix="";
     @FXML
@@ -63,45 +66,32 @@ public class StoreController implements Initializable {
 
     ObservableList<Toy> oblist = FXCollections.observableArrayList();
     @FXML
-    private RadioButton plageA0_6 ;
-    @FXML
-    private RadioButton plageA6_12 ;
-    @FXML
-    private RadioButton plageA12_18 ;
-    @FXML
-    private RadioButton plageA18_24 ;
-    @FXML
-    private RadioButton plageA24_36 ;
-    @FXML
-    private RadioButton plageA3_5 ;
-    @FXML
-    private RadioButton plageA6_9 ;
-    @FXML
-    private RadioButton plageA9plus ;
+    private Button OldFilter_btn ;
+
     @FXML
     private Pagination pagination;
     private FilteredList<Toy> filteredData;
 
-    private static final int ROWS_PER_PAGE = 4;
-    IToyRepository toyRepository = new ToyRepository();
+    private static final int ROWS_PER_PAGE = 7;
+    ToyRepository toyRepository = new ToyRepository();
+    MailinglistRepository mailinglistRepository = new MailinglistRepository();
 
 @FXML ImageView img  ;
+
+    @FXML
+    Spinner minAge;
+
+    @FXML
+    Spinner maxAge;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        /* Groupe pour les buttons radios*/
-        ToggleGroup plageAgeGroupe = new ToggleGroup();
-        plageA0_6.setToggleGroup(plageAgeGroupe);
-        plageA6_12.setToggleGroup(plageAgeGroupe);
-        plageA12_18.setToggleGroup(plageAgeGroupe);
-        plageA18_24.setToggleGroup(plageAgeGroupe);
-        plageA24_36.setToggleGroup(plageAgeGroupe);
-        plageA3_5.setToggleGroup(plageAgeGroupe);
-        plageA6_9.setToggleGroup(plageAgeGroupe);
-        plageA9plus.setToggleGroup(plageAgeGroupe);
+        typeFilter.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
 
+        /* Groupe pour les buttons radios*/
+       
         Afficher();
         tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -145,11 +135,18 @@ public class StoreController implements Initializable {
             event.consume();
         });
 
+        minAge.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10)
+        );
 
+        maxAge.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10)
+        );
     }
 
 
     public void PrixFilter(ActionEvent event){
+        Afficher();
         choix = prixFilter.getValue().toString();
         System.out.println(choix);
         if (choix.equals("Prix croissant")) {
@@ -168,6 +165,102 @@ public class StoreController implements Initializable {
 
     }
 
+    public void TypeFilter(ActionEvent event){
+        choix = typeFilter.getValue().toString();
+        System.out.println(choix);
+        toyRepository.findByType(choix);
+        oblist = FXCollections.observableArrayList(toyRepository.findByType(choix));
+
+
+        nom.setCellValueFactory(new PropertyValueFactory<>("name"));
+        // type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+
+        type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                String.valueOf(cellData.getValue().getType_id())));
+
+        prix.setCellValueFactory(new PropertyValueFactory<>("price"));
+        //pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
+        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
+//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
+
+        pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                cellData.getValue().getMax_age() + " ans et  " + cellData.getValue().getMin_age()+" ans"));
+
+
+        filteredData = new FilteredList<>(oblist, b -> true);
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(toy -> newValue == null || newValue.isEmpty() || toy.getName().toLowerCase()
+                    .contains(newValue.toLowerCase()));
+            changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
+        });
+        pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
+
+
+        int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
+        pagination.setPageCount(totalPage);
+        pagination.setCurrentPageIndex(0);
+        changeTableView(0, ROWS_PER_PAGE);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+
+
+
+
+    }
+
+
+    public void OldFilter(ActionEvent event){
+
+
+//        System.out.println(minAge.getValue().toString());
+
+        int min = Integer.parseInt(minAge.getValue().toString());
+        int max = Integer.parseInt(maxAge.getValue().toString());
+
+
+        oblist = FXCollections.observableArrayList(toyRepository.findByOld(min,max));
+
+
+        nom.setCellValueFactory(new PropertyValueFactory<>("name"));
+        // type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+
+        type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                String.valueOf(cellData.getValue().getType_id())));
+
+        prix.setCellValueFactory(new PropertyValueFactory<>("price"));
+        //pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
+        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
+//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
+
+        pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                cellData.getValue().getMax_age() + " ans et  " + cellData.getValue().getMin_age()+" ans"));
+
+
+        filteredData = new FilteredList<>(oblist, b -> true);
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        nameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(toy -> newValue == null || newValue.isEmpty() || toy.getName().toLowerCase()
+                    .contains(newValue.toLowerCase()));
+            changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
+        });
+        pagination.setPageCount((int) (Math.ceil(filteredData.size() * 1.0 / ROWS_PER_PAGE)));
+
+
+        int totalPage = (int) (Math.ceil(oblist.size() * 1.0 / ROWS_PER_PAGE));
+        pagination.setPageCount(totalPage);
+        pagination.setCurrentPageIndex(0);
+        changeTableView(0, ROWS_PER_PAGE);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+
+        }
+
+
+
+
 
     public void maillist() throws IOException {
         TextInputDialog dialog = new TextInputDialog("");
@@ -175,12 +268,8 @@ public class StoreController implements Initializable {
         dialog.setContentText("Veuillez introduire votre adresse mail");
 
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()){
-            System.out.println("Your name: " + result.get());
-        }
 
-// The Java 8 way to get the response value (with lambda expression).
-        result.ifPresent(name -> System.out.println("Your name: " + name));
+        result.ifPresent(email -> mailinglistRepository.addEmail(email));
     }
 
 
@@ -214,7 +303,7 @@ public class StoreController implements Initializable {
 
     void Afficher() {
 
-        oblist = FXCollections.observableArrayList(toyRepository.getAll());
+        oblist = FXCollections .observableArrayList(toyRepository.getAll());
 
 
         nom.setCellValueFactory(new PropertyValueFactory<>("name"));

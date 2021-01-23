@@ -15,12 +15,12 @@ public class MailinglistRepository implements ImailRepository {
     Connection connection = SingletonConnection.getConnexion();
 
     @Override
-    public void addType(Mailinglist mailinglist) {
+    public void addEmail(String email) {
 
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO mailinglist(Email) " +
                     "VALUES (?)") ;
-            ps.setString(1,mailinglist.getMail());
+            ps.setString(1,email);
 
             ps.executeUpdate();
 

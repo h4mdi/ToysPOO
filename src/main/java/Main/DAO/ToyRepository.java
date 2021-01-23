@@ -11,6 +11,60 @@ public class ToyRepository implements IToyRepository {
     Connection connection = SingletonConnection.getConnexion();
 
     @Override
+    public List<Toy> findByType(String type) {
+        List<Toy> ToylistBytype = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id JOIN toytypes" +
+                    " tt on tt.id=t.typeid where tt.Name=?");
+            ps.setString(1,type);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Toy toy = new Toy(rs.getInt("Id"),
+                        rs.getString("Name"),rs.getInt("TypeId")
+                        ,rs.getString("PicturePath"),rs.getDouble("Price"),
+//                        rs.getString("v.Name"),
+                        rs.getString("tt.name"),
+                        rs.getInt("MaxAge"),rs.getInt("MinAge"),
+                        rs.getInt("Quantity"),rs.getInt("vendorID"));
+
+                ToylistBytype.add(toy);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ToylistBytype;
+    }
+
+    @Override
+    public List<Toy> findByOld(int min , int max) {
+        List<Toy> ToylistByOld = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id JOIN toytypes" +
+                    " tt on tt.id=t.typeid where t.MinAge >= ? AND t.MaxAge <=?");
+            ps.setInt(1,min);
+            ps.setInt(2,max);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Toy toy = new Toy(rs.getInt("Id"),
+                        rs.getString("Name"),rs.getInt("TypeId")
+                        ,rs.getString("PicturePath"),rs.getDouble("Price"),
+//                        rs.getString("v.Name"),
+                        rs.getString("tt.name"),
+                        rs.getInt("MaxAge"),rs.getInt("MinAge"),
+                        rs.getInt("Quantity"),rs.getInt("vendorID"));
+
+                ToylistByOld.add(toy);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ToylistByOld;
+    }
+
+
+    @Override
     public Toy findById(int id) {
         return null;
     }
