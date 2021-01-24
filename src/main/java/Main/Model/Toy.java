@@ -5,38 +5,28 @@ public class Toy {
 //    la personne cible par le jouet, une photo, un prix, un fournisseur et un stock.
     private int id;
     private String name;
-    private int type_id;
     private String photo;
     private double price;
-    private String vendor_name;
     private int min_age;
     private int max_age;
     private double stock;
-    private int vendorID ;
+    private int type_id;
+    private String type_name;
+    private int vendorID;
+    private String vendor_name;
 
-    public Toy(int id, String name, int type_id, String photo, double price, String vendor_name, int min_age, int max_age, double stock, int vendorID) {
+    public Toy(int id, String name, String photo, double price, int min_age, int max_age, double stock, int type_id, String type_name, int vendorID, String vendor_name) {
         this.id = id;
         this.name = name;
-        this.type_id = type_id;
         this.photo = photo;
         this.price = price;
-        this.vendor_name = vendor_name;
         this.min_age = min_age;
         this.max_age = max_age;
         this.stock = stock;
+        this.type_id = type_id;
+        this.type_name = type_name;
         this.vendorID = vendorID;
-    }
-
-    public int getVendorID() {
-        return vendorID;
-    }
-
-    public void setVendorID(int vendorID) {
-        this.vendorID = vendorID;
-    }
-
-    public Toy() {
-
+        this.vendor_name = vendor_name;
     }
 
     public int getId() {
@@ -55,14 +45,6 @@ public class Toy {
         this.name = name;
     }
 
-    public int getType_id() {
-        return type_id;
-    }
-
-    public void setType_id(int type_id) {
-        this.type_id = type_id;
-    }
-
     public String getPhoto() {
         return photo;
     }
@@ -77,14 +59,6 @@ public class Toy {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String getVendor_name() {
-        return vendor_name;
-    }
-
-    public void setVendor_name(String vendor_name) {
-        this.vendor_name = vendor_name;
     }
 
     public int getMin_age() {
@@ -109,5 +83,40 @@ public class Toy {
 
     public void setStock(double stock) {
         this.stock = stock;
+    }
+
+    public int getType_id() {
+        return type_id;
+    }
+
+    public void setType_id(int type_id) {
+        this.type_id = type_id;
+    }
+
+    public String getType_name() {
+        return type_name;
+    }
+
+    public void setType_name(String type_name) {
+        this.type_name = type_name;
+    }
+
+    public int getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(int vendorID) {
+        this.vendorID = vendorID;
+    }
+
+    public String getVendor_name() {
+        return vendor_name;
+    }
+
+    public void setVendor_name(String vendor_name) {
+        this.vendor_name = vendor_name;
+    }
+
+    public Toy() {
     }
 }

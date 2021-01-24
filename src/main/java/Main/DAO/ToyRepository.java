@@ -21,13 +21,12 @@ public class ToyRepository implements IToyRepository {
 
             while (rs.next()) {
                 Toy toy = new Toy(rs.getInt("Id"),
-                        rs.getString("Name"),rs.getInt("TypeId")
+                        rs.getString("Name")
                         ,rs.getString("PicturePath"),rs.getDouble("Price"),
-//                        rs.getString("v.Name"),
-                        rs.getString("tt.name"),
-                        rs.getInt("MaxAge"),rs.getInt("MinAge"),
-                        rs.getInt("Quantity"),rs.getInt("vendorID"));
-
+                        rs.getInt("MinAge"),rs.getInt("MaxAge"),
+                        rs.getInt("Quantity"),rs.getInt("TypeId"),
+                        rs.getString("tt.Name"),rs.getInt("VendorId"),
+                        rs.getString("v.Name"));
                 ToylistBytype.add(toy);
             }
         } catch (SQLException e) {
@@ -48,12 +47,13 @@ public class ToyRepository implements IToyRepository {
 
             while (rs.next()) {
                 Toy toy = new Toy(rs.getInt("Id"),
-                        rs.getString("Name"),rs.getInt("TypeId")
+                        rs.getString("Name")
                         ,rs.getString("PicturePath"),rs.getDouble("Price"),
-//                        rs.getString("v.Name"),
-                        rs.getString("tt.name"),
-                        rs.getInt("MaxAge"),rs.getInt("MinAge"),
-                        rs.getInt("Quantity"),rs.getInt("vendorID"));
+                        rs.getInt("MinAge"),rs.getInt("MaxAge"),
+                        rs.getInt("Quantity"),rs.getInt("TypeId"),
+                        rs.getString("tt.Name"),rs.getInt("VendorId"),
+                        rs.getString("v.Name"));
+
 
                 ToylistByOld.add(toy);
             }
@@ -73,19 +73,18 @@ public class ToyRepository implements IToyRepository {
     public List<Toy> getAll() {
         List<Toy> Toylist = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.id=v.id JOIN toytypes" +
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM toys t left JOIN vendors v on t.VendorId=v.id JOIN toytypes" +
                     " tt on tt.id=t.typeid");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Toy toy = new Toy(rs.getInt("Id"),
-                        rs.getString("Name"),rs.getInt("TypeId")
+                        rs.getString("Name")
                         ,rs.getString("PicturePath"),rs.getDouble("Price"),
-//                        rs.getString("v.Name"),
-                        rs.getString("tt.name"),
-                        rs.getInt("MaxAge"),rs.getInt("MinAge"),
-                        rs.getInt("Quantity"),rs.getInt("vendorID"));
-
+                        rs.getInt("MinAge"),rs.getInt("MaxAge"),
+                        rs.getInt("Quantity"),rs.getInt("TypeId"),
+                        rs.getString("tt.Name"),rs.getInt("VendorId"),
+                        rs.getString("v.Name"));
                 Toylist.add(toy);
                 System.out.println(Toylist);
                 System.out.println("--------------");
@@ -110,7 +109,7 @@ public class ToyRepository implements IToyRepository {
             ps.setInt(5,toy.getMax_age());
             ps.setString(6,toy.getPhoto());
             ps.setDouble(7,toy.getPrice());
-            ps.setInt(8,toy.getType_id());
+            ps.setInt(8,toy.getVendorID());
             ps.setDouble(9,toy.getStock());
 
             ps.executeUpdate();
@@ -195,7 +194,6 @@ public class ToyRepository implements IToyRepository {
 
         return emails;    }
 
-
     @Override
     public List<String> getAllVendors() {
         List<String> Vendorlist = new ArrayList<>();
@@ -208,9 +206,9 @@ public class ToyRepository implements IToyRepository {
                         rs.getString("Name")
                         ,rs.getString("Email"),rs.getString("Address")
                         ,rs.getString("FacebookUrl")
-                       );
+                );
 
-                Vendorlist.add(vendor.getName());
+                Vendorlist.add(vendor.getName()+" "+"["+vendor.getId()+"]");
 
             }
         } catch (SQLException e) {
@@ -232,7 +230,7 @@ public class ToyRepository implements IToyRepository {
                 ToyType toyType = new ToyType(rs.getInt("Id"),
                         rs.getString("Name"));
 
-                ToyTypelist.add(toyType.getName());
+                ToyTypelist.add(toyType.getName()+" "+"["+toyType.getId()+"]");
 
             }
         } catch (SQLException e) {
@@ -241,7 +239,6 @@ public class ToyRepository implements IToyRepository {
 
         return ToyTypelist;
     }
-
     @Override
     public void addType(ToyType toyType) {
 

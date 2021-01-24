@@ -218,7 +218,7 @@
                               <Pane fx:id="pnlOrders1" prefHeight="200.0" prefWidth="200.0" />
                               <Pane fx:id="pnlMenus1" prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <Pane fx:id="pnlOverview1" layoutX="-263.0" prefHeight="612.0" prefWidth="769.0" style="-fx-background-color: #f7f3f8;">
+                                    <Pane fx:id="pnlOverview1" layoutX="-262.0" prefHeight="612.0" prefWidth="781.0" style="-fx-background-color: #f7f3f8;">
                                        <children>
                                           <Button layoutX="751.0" layoutY="1.0" mnemonicParsing="false" opacity="0.0" prefHeight="27.0" prefWidth="33.0" text="Button" textFill="#e05c86" />
                                           <Label layoutX="149.0" layoutY="144.0" text="Nom :">

@@ -4,6 +4,7 @@ import Main.DAO.Interfaces.IToyRepository;
 import Main.DAO.ToyRepository;
 import Main.Model.Toy;
 import Main.Model.ToyType;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -39,6 +40,14 @@ public class ToyController implements Initializable {
 
     @FXML
     private TextField nameFilter;
+
+
+    @FXML
+    private TextField update_min1;
+
+
+    @FXML
+    private TextField update_max1;
 
     @FXML
     private Pagination pagination;
@@ -130,6 +139,7 @@ public class ToyController implements Initializable {
         Afficher();
         insert_Vendor.setItems(FXCollections.observableArrayList(toyRepository.getAllVendors()));
         insert_type1.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
+        update_type.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
 
             }
 
@@ -257,21 +267,21 @@ public class ToyController implements Initializable {
                 ToyRepository toyRepository = new ToyRepository();
                 Toy toy = new Toy(tableView.getSelectionModel().getSelectedItem().getId(),
                         update_name.getText(),
-                        Integer.parseInt(update_min.getText()),
                         toyphoto.getText(),
 
                         Double.parseDouble(update_price.getText()),
-                        update_vendor.getText(),
-
                         Integer.parseInt(update_min.getText()),
                         Integer.parseInt(update_max.getText()),
-                        Double.parseDouble(update_stock.getText()),tableView.getSelectionModel().getSelectedItem().getVendorID()
+                        Double.parseDouble(update_stock.getText()),
+                        tableView.getSelectionModel().getSelectedItem().getVendorID(),
+                        update_name.getText(),
+                        Integer.parseInt(update_max.getText()),
+                        update_name.getText());
 
-                        );
+
+
 
                 toyRepository.update(toy);
-                System.out.println(toy);
-                System.out.println("___________a_________");
 
                 refresh();
             }
@@ -307,28 +317,32 @@ public class ToyController implements Initializable {
 
     }
 
+
     @FXML
     private void SaveAddToy(ActionEvent event) {
 
 
-        deplacerVers(toyphoto, absolutePathPhoto,"C:\\Users\\hp\\Sesame\\3Java_Sesame\\Projet_POO_mvn_fin\\src\\main\\resources\\toysphoto");
+        deplacerVers(toyphoto, absolutePathPhoto,"C:\\Users\\hp\\IdeaProjects\\ToysPOO\\src\\main\\resources\\toysphoto");
         deplacerVers(toyphoto, absolutePathPhoto,"C:\\wamp64\\www\\toys\\photos");
         Toy toy = new Toy() ;
 
-               toy.setName(insert_name.getText());
-        toy.setType_id(Integer.parseInt(insert_price.getText())) ;//type
-            toy.setPhoto(toyphoto.getText()) ;
-               toy.setPrice( Double.parseDouble(insert_price.getText())) ;
+        toy.setName(insert_name.getText());
+        int start =insert_type1.getSelectionModel().getSelectedItem().lastIndexOf('[')+1;
+        int end =insert_type1.getSelectionModel().getSelectedItem().indexOf(']');
 
-                toy.setVendor_name(insert_vendor.getText());
-                toy.setMin_age(Integer.parseInt(insert_price.getText())) ;//minage
-        toy.setMax_age(Integer.parseInt(insert_price.getText())); //maxage
+        toy.setType_id(Integer.parseInt(insert_type1.getSelectionModel().getSelectedItem().substring(start,end))) ;//type
+        toy.setPhoto("http://localhost/toys/photos/"+toyphoto.getText()) ;
+        toy.setPrice( Double.parseDouble(insert_price.getText())) ;
 
+        toy.setVendor_name(insert_Vendor.getSelectionModel().getSelectedItem().substring(0,insert_Vendor.getSelectionModel().getSelectedItem().lastIndexOf('[')-1));
+        toy.setMin_age(Integer.parseInt(update_min1.getText())) ;//minage
+        toy.setMax_age(Integer.parseInt(update_max1.getText())); //maxage
+        toy.setVendorID(Integer.parseInt(insert_Vendor.getSelectionModel().getSelectedItem().substring(insert_Vendor.getSelectionModel().getSelectedItem().lastIndexOf('[')+1,insert_Vendor.getSelectionModel().getSelectedItem().indexOf(']')))) ;
         toy.setStock(Double.parseDouble(insert_stock.getText()));
 
 
         if (insert_name.getText().equals("") || insert_price.getText().equals("") ||
-                insert_price.getText()==null || toyphoto.getText()==null || insert_vendor.getText()==null || insert_stock.getText().equals("")  ) {
+                insert_price.getText()==null || toyphoto.getText()==null || insert_stock.getText().equals("")  ) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Alerte");
             alert.setHeaderText("Vous devez remplir TOUT LES CHAMPS SVP");
@@ -350,8 +364,7 @@ public class ToyController implements Initializable {
             Afficher();
             insert_name.setText("");
             insert_price.setText("");
-            insert_vendor.setText("");
-            photoProduit.setText("");
+            toyphoto.setText("");
             insert_stock.setText("");
             tab.getSelectionModel().select(0);
 
@@ -365,7 +378,6 @@ public class ToyController implements Initializable {
         }
 
     }
-
 
     @FXML
     private void deleteToy(ActionEvent event) {
@@ -394,12 +406,15 @@ public class ToyController implements Initializable {
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         nom.setCellValueFactory(new PropertyValueFactory<>("name"));
-        type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
+
+        type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                String.valueOf(cellData.getValue().getType_name())));
+
         prix.setCellValueFactory(new PropertyValueFactory<>("price"));
-        fseur.setCellValueFactory(new PropertyValueFactory<>("vendor_name"));
-        stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
-        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
+        fseur.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                String.valueOf(cellData.getValue().getVendor_name())));        stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
+                cellData.getValue().getMin_age() + " ans et  " + cellData.getValue().getMax_age()+" ans"));         // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
 //        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
 
 

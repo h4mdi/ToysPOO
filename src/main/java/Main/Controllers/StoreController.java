@@ -176,15 +176,12 @@ public class StoreController implements Initializable {
         // type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
 
         type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
-                String.valueOf(cellData.getValue().getType_id())));
+                String.valueOf(cellData.getValue().getType_name())));
 
         prix.setCellValueFactory(new PropertyValueFactory<>("price"));
-        //pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
-        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
-//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
 
         pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
-                cellData.getValue().getMax_age() + " ans et  " + cellData.getValue().getMin_age()+" ans"));
+                cellData.getValue().getMin_age() + " ans et  " + cellData.getValue().getMax_age()+" ans"));
 
 
         filteredData = new FilteredList<>(oblist, b -> true);
@@ -227,7 +224,7 @@ public class StoreController implements Initializable {
         // type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
 
         type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
-                String.valueOf(cellData.getValue().getType_id())));
+                String.valueOf(cellData.getValue().getType_name())));
 
         prix.setCellValueFactory(new PropertyValueFactory<>("price"));
         //pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
@@ -235,7 +232,7 @@ public class StoreController implements Initializable {
 //        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
 
         pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
-                cellData.getValue().getMax_age() + " ans et  " + cellData.getValue().getMin_age()+" ans"));
+                cellData.getValue().getMin_age() + " ans et  " + cellData.getValue().getMax_age()+" ans"));
 
 
         filteredData = new FilteredList<>(oblist, b -> true);
@@ -310,7 +307,7 @@ public class StoreController implements Initializable {
        // type.setCellValueFactory(new PropertyValueFactory<>("type_id"));
 
         type.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
-                String.valueOf(cellData.getValue().getType_id())));
+                String.valueOf(cellData.getValue().getType_name())));
 
         prix.setCellValueFactory(new PropertyValueFactory<>("price"));
         //pa.setCellValueFactory(new PropertyValueFactory<>("min_age"));
@@ -318,7 +315,7 @@ public class StoreController implements Initializable {
 //        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
 
         pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
-                        cellData.getValue().getMax_age() + " ans et  " + cellData.getValue().getMin_age()+" ans"));
+                cellData.getValue().getMin_age() + " ans et  " + cellData.getValue().getMax_age()+" ans"));
 
 
         filteredData = new FilteredList<>(oblist, b -> true);
