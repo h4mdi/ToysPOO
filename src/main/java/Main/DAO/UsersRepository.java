@@ -19,7 +19,7 @@ public class UsersRepository implements IUserRepository{
 
     @Override
     public User auth(String login,String password) {
-        User u = new User();
+
 
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users u WHERE u.login = ? and u.password = ?");
@@ -27,16 +27,20 @@ public class UsersRepository implements IUserRepository{
             ps.setString(2, password);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
+                User u = new User();
                 u.setLogin(resultSet.getString("u.Login"));
                 u.setId(resultSet.getInt("u.Id"));
                 u.setPassword(resultSet.getString("u.Password"));
                 u.setIsAdmin(resultSet.getInt("u.isAdmin"));
 
+                return u;
 
             }
         } catch (SQLException e) {
+
         }
-return u;
+        return null;
+
     }
 
 

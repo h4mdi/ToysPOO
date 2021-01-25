@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  ven. 01 jan. 2021 à 14:30
+-- Généré le :  lun. 25 jan. 2021 à 14:40
 -- Version du serveur :  5.7.26
 -- Version de PHP :  7.1.29
 
@@ -26,6 +26,18 @@ DELIMITER $$
 --
 -- Procédures
 --
+DROP PROCEDURE IF EXISTS `GetMaxSalesByPerson`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetMaxSalesByPerson` (IN `startDate` DATE, IN `endDate` DATE)  NO SQL
+SELECT o.SalesPersonId ,SUM(od.Quantity*od.UnitPrice)
+FROM orderdetails od 
+JOIN orders o ON od.OrderId = o.Id
+WHERE o.IsValid=1
+AND (startDate is null OR startDate<=o.Date)
+AND (endDate is null OR endDate>=o.Date)
+GROUP BY od.OrderId
+ORDER BY SUM(od.Quantity*od.UnitPrice) DESC
+LIMIT 1$$
+
 DROP PROCEDURE IF EXISTS `GetSalesByPerson`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSalesByPerson` (IN `startDate` DATE, IN `endDate` DATE)  NO SQL
 SELECT o.SalesPersonId ,SUM(od.Quantity*od.UnitPrice)
@@ -35,6 +47,19 @@ WHERE o.IsValid=1
 AND (startDate is null OR startDate<=o.Date)
 AND (endDate is null OR endDate>=o.Date)
 GROUP BY od.OrderId$$
+
+DROP PROCEDURE IF EXISTS `GetSalesByToy`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetSalesByToy` (IN `startDate` DATE, IN `endDate` DATE)  NO SQL
+SELECT tt.Name,SUM(od.Quantity*od.UnitPrice)
+FROM orders o
+JOIN orderdetails od on o.Id=od.OrderId
+JOIN toys t on t.Id = od.TotyId 
+JOIN toytypes tt on t.TypeId = tt.Id
+WHERE o.IsValid=1
+AND (startDate is null OR startDate<=o.Date)
+AND (endDate is null OR endDate>=o.Date)
+GROUP BY tt.Name
+ORDER BY tt.Name$$
 
 DROP PROCEDURE IF EXISTS `GetTotalSales`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `GetTotalSales` (IN `startDate` DATE, IN `endDate` DATE)  NO SQL
@@ -64,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `mailinglist` (
 --
 
 INSERT INTO `mailinglist` (`Email`) VALUES
+('bourouniahamdi7@gmail.Com'),
 ('h4Mdy1234@gmail.com');
 
 -- --------------------------------------------------------
@@ -78,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `orderdetails` (
   `TotyId` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
   `UnitPrice` decimal(8,3) NOT NULL,
+  `orderNumber` int(11) NOT NULL,
   PRIMARY KEY (`OrderId`,`TotyId`),
   KEY `TotyId` (`TotyId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -86,9 +113,12 @@ CREATE TABLE IF NOT EXISTS `orderdetails` (
 -- Déchargement des données de la table `orderdetails`
 --
 
-INSERT INTO `orderdetails` (`OrderId`, `TotyId`, `Quantity`, `UnitPrice`) VALUES
-(1, 7, 200, '100.000'),
-(4, 7, 10, '100.000');
+INSERT INTO `orderdetails` (`OrderId`, `TotyId`, `Quantity`, `UnitPrice`, `orderNumber`) VALUES
+(1, 71, 71, '20.000', 1),
+(2, 70, 70, '10.000', 1),
+(3, 70, 70, '10.000', 2),
+(4, 70, 70, '10.000', 3),
+(5, 71, 71, '20.000', 3);
 
 -- --------------------------------------------------------
 
@@ -100,47 +130,23 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Date` date NOT NULL,
-  `OrderNumber` varchar(50) NOT NULL,
+  `OrderNumber` int(11) NOT NULL,
   `SalesPersonId` int(11) NOT NULL,
   `IsValid` tinyint(4) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `SalesPersonId` (`SalesPersonId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `orders`
 --
 
 INSERT INTO `orders` (`Id`, `Date`, `OrderNumber`, `SalesPersonId`, `IsValid`) VALUES
-(1, '2020-11-01', '10', 1, 1),
-(2, '2020-11-01', '10', 1, 1),
-(3, '2020-10-01', '11', 1, 1),
-(4, '2020-09-01', '12', 2, 1),
-(5, '2020-11-01', '15', 1, 1),
-(6, '2020-10-01', '70', 2, 1),
-(7, '2020-12-01', '10', 2, 1);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `phonetypes`
---
-
-DROP TABLE IF EXISTS `phonetypes`;
-CREATE TABLE IF NOT EXISTS `phonetypes` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(20) NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-
---
--- Déchargement des données de la table `phonetypes`
---
-
-INSERT INTO `phonetypes` (`Id`, `Name`) VALUES
-(1, 'Bureau'),
-(2, 'Portable'),
-(3, 'Personnel');
+(1, '2021-01-24', 1, 2, 0),
+(2, '2021-01-24', 1, 2, 0),
+(3, '2021-01-24', 2, 2, 1),
+(4, '2021-01-24', 3, 2, 0),
+(5, '2021-01-24', 3, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -162,20 +168,15 @@ CREATE TABLE IF NOT EXISTS `toys` (
   PRIMARY KEY (`Id`),
   KEY `TypeId` (`TypeId`),
   KEY `VendorId` (`VendorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `toys`
 --
 
 INSERT INTO `toys` (`Id`, `Name`, `TypeId`, `MinAge`, `MaxAge`, `PicturePath`, `Price`, `VendorId`, `Quantity`) VALUES
-(7, 'Updateddc', 120, 5, 4, 'http://localhost/php/img/7.jpg', '200.000', 1, 120),
-(8, 'Bazzare', 120, 0, 4, 'http://localhost/php/img/7.jpg', '20.000', 1, 120),
-(9, 'ToyJoy', 120, 0, 4, 'http://localhost/php/img/10.png', '500.000', 1, 120),
-(10, 'ToyJoy', 120, 0, 4, 'http://localhost/php/img/7.jpg', '850.000', 1, 120),
-(11, 'Azz', 120, 0, 4, 'http://localhost/php/img/7.jpg', '65.000', 1, 120),
-(58, 'Jozef', 22, 22, 22, '11', '22.000', 22, 11),
-(59, 'test', 44, 44, 44, '44', '44.000', 44, 44);
+(70, 'xeds', 6, 0, 10, 'http://localhost/toys/photos/2000px-LaTeX_logo.svg.png', '10.000', 1, 10),
+(71, 'too', 8, 1, 1, 'http://localhost/toys/photos/pwd_user.png', '20.000', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -223,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `SIN` varchar(20) DEFAULT NULL,
   `IsAdmin` tinyint(4) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `users`
@@ -231,24 +232,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`Id`, `Login`, `Password`, `Email`, `PhotoPath`, `Phone`, `FacebookUrl`, `SIN`, `IsAdmin`) VALUES
 (1, 'admin', 'admin', 'h4Mdy1234@gmail.com', NULL, NULL, NULL, NULL, 1),
-(2, 'user01', 'user01', 'hahahah', 'hhh', 'hhh', 'hhh', 'hh', 0);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `vendorphones`
---
-
-DROP TABLE IF EXISTS `vendorphones`;
-CREATE TABLE IF NOT EXISTS `vendorphones` (
-  `Id` int(11) NOT NULL,
-  `PhoneNumber` int(11) NOT NULL,
-  `VendorId` int(11) NOT NULL,
-  `PhoneTypeId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `PhoneTypeId` (`PhoneTypeId`),
-  KEY `VendorId` (`VendorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+(2, 'user01', 'user01', 'hahahah', 'C:\\Users\\hp\\IdeaProjects\\ToysPOO\\src\\main\\resources\\usersphoto\\usersphoto\\2.jpg', 'hhh', 'hhh', 'hh', 0),
+(3, 'user02', 'xec', 'h@gmail.com', 'http://localhost/toys/userphotos/http://localhost/toys/userphotos/2.jpg', '00000000', 'hhh', '1920', 0),
+(7, 'hhh', 'hhh', 'hhhh', 'http://localhost/toys/userphotos/scrum-agile.png', 'hhhh', 'hhh', 'hhh', 0);
 
 -- --------------------------------------------------------
 
@@ -263,29 +249,17 @@ CREATE TABLE IF NOT EXISTS `vendors` (
   `Email` varchar(50) NOT NULL,
   `Address` varchar(100) DEFAULT NULL,
   `FacebookUrl` varchar(100) DEFAULT NULL,
+  `phone` varchar(50) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `vendors`
 --
 
-INSERT INTO `vendors` (`Id`, `Name`, `Email`, `Address`, `FacebookUrl`) VALUES
-(1, '3mirat', 'h4Mdy1234@gmail.com', 'Hammamet', 'https://developers.facebook.com/apps/309315746974708/settings/advanced/');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `vendortoystypes`
---
-
-DROP TABLE IF EXISTS `vendortoystypes`;
-CREATE TABLE IF NOT EXISTS `vendortoystypes` (
-  `VendorId` int(11) NOT NULL,
-  `ToyTypeId` int(11) NOT NULL,
-  PRIMARY KEY (`VendorId`,`ToyTypeId`),
-  KEY `ToyTypeId` (`ToyTypeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `vendors` (`Id`, `Name`, `Email`, `Address`, `FacebookUrl`, `phone`) VALUES
+(1, '3mirat', 'h4Mdy1234@gmail.com', 'Hammametj', 'https://developers.facebook.com/apps/309315746974708/settings/advanced/', '97564771'),
+(2, 'Hamdi', 'bourouniahamdi7@gmail.com', 'Nabeul', 'www.fb.com', '55419494=');
 
 --
 -- Contraintes pour les tables déchargées

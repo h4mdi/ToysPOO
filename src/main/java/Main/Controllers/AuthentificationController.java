@@ -45,6 +45,10 @@ public class AuthentificationController implements Initializable {
         String password = tfpassword.getText();
         UsersRepository usersRepository = new UsersRepository();
         User u = usersRepository.auth(login,password);
+        if(u == null){
+            infoBox("Veuillez vérifier votre login et mot de passe", null, "Erreur de connexion");
+
+        }else
                 if (u.getIsAdmin() == 1) {
                     infoBox("Connexion effectuée avec succès!", null, "Succès de connexion");
                     Parent parent = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
@@ -73,6 +77,8 @@ public class AuthentificationController implements Initializable {
 
 
             }
+
+
 
             else  {
 
