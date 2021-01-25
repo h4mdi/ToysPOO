@@ -72,32 +72,7 @@ public class UserController implements Initializable {
     @FXML
     private TableColumn<User, String> fb;
 
-    @FXML
-    private Button btn_afficherPhoto;
-    @FXML
-    private Button btn_addToy;
-    @FXML
-    private Button btn_updateToy;
 
-    @FXML
-    private TextField update_name;
-    @FXML
-    private TextField update_vendor;
-    @FXML
-    private TextField update_price;
-
-    @FXML
-    private TextField update_stock;
-    @FXML
-    private TextField update_picture;
-    @FXML
-    private TextField update_min;
-    @FXML
-    private TextField update_max;
-    @FXML
-    private Button PhotoUpload;
-    @FXML
-    private ComboBox<String> update_type;
 
     @FXML
     private TextField User_photo;
@@ -371,8 +346,26 @@ public class UserController implements Initializable {
         }
     }
 
+    public void upphotoChooser(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File choix = fileChooser.showOpenDialog(null);
+        if (choix != null) {
+
+            absolutePathPhoto = choix.getAbsolutePath();
+
+            User_photoEdit.setText(choix.getName());
+        } else {
+            System.out.println("Image introuvable");
+        }
+    }
+
+
     public void SaveAddUser(ActionEvent actionEvent) {
-   //     deplacerVers(User_photo, absolutePathPhoto,"C:\\Users\\hp\\Sesame\\3Java_Sesame\\Projet_POO_mvn_fin\\src\\main\\resources\\toysphoto");
+        deplacerVers(User_photo, absolutePathPhoto,"C:\\Users\\hp\\Sesame\\3Java_Sesame\\Projet_POO_mvn_fin\\src\\main\\resources\\usersphoto");
         deplacerVers(User_photo, absolutePathPhoto,"C:\\wamp64\\www\\toys\\userphotos");
         User user = new User() ;
 
@@ -440,17 +433,18 @@ public class UserController implements Initializable {
     }
 
     public void save_Update(ActionEvent actionEvent) {
-
-        deplacerVers(User_photo, absolutePathPhoto,"C:\\wamp64\\www\\toys\\userphotos");
+        deplacerVers(User_photoEdit, absolutePathPhoto,"C:\\Users\\hp\\Sesame\\3Java_Sesame\\Projet_POO_mvn_fin\\src\\main\\resources\\usersphoto");
+        deplacerVers(User_photoEdit, absolutePathPhoto,"C:\\wamp64\\www\\toys\\userphotos");
         User user = new User() ;
 
         user.setId(tableView.getSelectionModel().getSelectedItem().getId());
         user.setLogin(insert_nameEdit.getText());
         user.setPassword(insert_pwdEdit.getText()); ;//type
+//        user.setPhoto("http://localhost/toys/userphotos/"+User_photoEdit.getText()) ;
         user.setPhoto("http://localhost/toys/userphotos/"+User_photoEdit.getText()) ;
+
         user.setEmail(insert_emailEdit.getText());
         user.setSin(insert_SinEdit.getText());
-
         user.setPhone(insert_telEdit.getText());
         user.setFacebook(insert_fbEdit.getText());
         user.setIsAdmin(0);
