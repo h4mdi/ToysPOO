@@ -52,7 +52,7 @@ public class OrderRepository implements IOrderRepository {
             ps.setInt(5,order.getIsValid());
 
             ps1.setInt(1,toy.getId());
-            ps1.setInt(2,toy.getId());
+            ps1.setInt(2,1);
             ps1.setDouble(3,toy.getPrice());
             ps1.setInt(4,order.getOrderNumber());
 
