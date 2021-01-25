@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -114,7 +115,7 @@ public class StoreController implements Initializable {
                     stage.setScene(new Scene(p));
                     stage.show();
                 } catch (IOException | SQLException ex) {
-                    ex.printStackTrace();
+                    javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

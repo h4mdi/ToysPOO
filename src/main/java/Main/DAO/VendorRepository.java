@@ -24,7 +24,8 @@ public class VendorRepository implements IVendorRepository {
             while (rs.next()) {
                 Vendor vendor = new Vendor(rs.getInt("Id"),
                         rs.getString("Name"),rs.getString("Email")
-                        ,rs.getString("Address"),rs.getString("FacebookUrl"));
+                        ,rs.getString("Address"),rs.getString("FacebookUrl"),
+                        rs.getString("phone"));
 
                 Vendorlist.add(vendor);
 //                System.out.println(Toylist);
@@ -40,13 +41,14 @@ public class VendorRepository implements IVendorRepository {
     public void addVendors(Vendor Vendor) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Vendors(Id, Name,Address,Email,FacebookUrl) " +
-                    "VALUES (? , ? ,? ,? ,?)") ;
+                    "VALUES (? , ? ,? ,? ,?,?)") ;
             ps.setInt(1,Vendor.getId());
             ps.setString(2,Vendor.getName());
             ps.setString(3,Vendor.getAddress());
             ps.setString(4,Vendor.getEmail());
 
             ps.setString(5,Vendor.getFacebook());
+            ps.setString(6,Vendor.getPhone());
 
 
             ps.executeUpdate();
@@ -78,12 +80,14 @@ public class VendorRepository implements IVendorRepository {
     public void editVendor(Vendor vendor) {
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE vendors SET Name=? , Email= ?, Address= ?, FacebookUrl= ? where Id= ?");
-            ps.setInt(5,vendor.getId());
+            PreparedStatement ps = connection.prepareStatement("UPDATE vendors v SET v.Name=? , v.Email= ?, v.Address= ?, v.FacebookUrl= ?,v.phone=? where v.Id= ?");
             ps.setString(1,vendor.getName());
             ps.setString(2,vendor.getEmail());
             ps.setString(3,vendor.getAddress());
             ps.setString(4,vendor.getFacebook());
+            ps.setString(5,vendor.getPhone());
+            ps.setInt(6,vendor.getId());
+
 
             ps.executeUpdate();
 
@@ -91,14 +95,6 @@ public class VendorRepository implements IVendorRepository {
             e.printStackTrace();
 
         }
-
-    }
-
-    public void SaveAddToy(Vendor Vendor) {
-
-
-
-
 
     }
 

@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface IUserRepository extends IRepository<User> {
-    public List<User> getAllUsers();
+    public User auth(String login,String password) ;
+        public List<User> getAllUsers();
     public void addUser(User user);
     public void deleteUser(int id);
     public void editUser(User user);

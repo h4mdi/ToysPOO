@@ -14,12 +14,7 @@ public class UserPhotoController implements Initializable {
 
     @FXML
     private ImageView idImg;
-//    @FXML
-//    private Label btn_exit;
-//    @FXML
-//    private void aaaa(MouseEvent event) {
-//      System.exit(0);
-//    }
+
 
     private User user;
     private static UserPhotoController instance;

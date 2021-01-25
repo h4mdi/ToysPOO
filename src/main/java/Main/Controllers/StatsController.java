@@ -64,7 +64,6 @@ DatePicker endDatepicker ;
             ;
     IToyRepository toyRepository = new ToyRepository();
 
-    //    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     java.sql.Date startDate ;
     java.sql.Date endDate ;
     ObservableList<SalesByPerson> salesByPersonObservableList ;
@@ -124,9 +123,6 @@ DatePicker endDatepicker ;
         series = new XYChart.Series();
 
 
-//        series.getData().add(new XYChart.Data<String, Number>("Hamdi",120));
-//        series.getData().add(new XYChart.Data<String, Number>("3mirat",20));
-//        series.getData().add(new XYChart.Data<String, Number>("Jozef",70));
         for (SalesByPerson s : toyRepository.GetSalesByPerson(startDate,endDate)) {
             series.getData().add(new XYChart.Data<String,Double>(String.valueOf(s.getId()),s.getCv()));
 
@@ -166,9 +162,6 @@ DatePicker endDatepicker ;
 
         LocalDate sd =startDatepicker11.getValue();
         LocalDate ed= endDatepicker11.getValue();
-//
-//        System.out.println(sd);
-//        System.out.println(ed);
 
         java.sql.Date startDate = java.sql.Date.valueOf(sd);
         java.sql.Date endDate = java.sql.Date.valueOf(ed);
@@ -179,25 +172,6 @@ DatePicker endDatepicker ;
 
     }
 
-//    void ChartByToy() {
-//
-//        salesByToyObservableList = FXCollections.observableArrayList(toyRepository.GetSalesByPerson(startDate,endDate));
-//        series = new XYChart.Series();
-//
-//
-////        series.getData().add(new XYChart.Data<String, Number>("Hamdi",120));
-////        series.getData().add(new XYChart.Data<String, Number>("3mirat",20));
-////        series.getData().add(new XYChart.Data<String, Number>("Jozef",70));
-//        for (SalesByPerson s : toyRepository.GetSalesByPerson(startDate,endDate)) {
-//            series.getData().add(new XYChart.Data<String,Double>(String.valueOf(s.getId()),s.getCv()));
-//
-//        }
-//
-//        series.setName("Ventes");
-//        toybarchart.getData().add(series);
-//
-//        hardWorker.setText(String.valueOf(toyRepository.GetMaxSalesByPerson(startDate,endDate).get(0).getId()));
-//    }
 
    /* ================ /*
   * Sidebar Menu *

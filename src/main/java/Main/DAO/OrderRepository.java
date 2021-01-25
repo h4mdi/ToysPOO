@@ -80,7 +80,7 @@ public class OrderRepository implements IOrderRepository {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-               last= rs.getInt("OrderNumber") ;
+                last= rs.getInt("OrderNumber") ;
                 System.out.println(last+"e5er wehed");
             }
 
@@ -88,11 +88,11 @@ public class OrderRepository implements IOrderRepository {
             ex.printStackTrace();
             System.out.println("error");
 
-    }
+        }
         return last ;
 
 
-}
+    }
 
 
     @Override
@@ -124,7 +124,30 @@ public class OrderRepository implements IOrderRepository {
         List<Order> Order = new ArrayList<>();
         Connection connection = SingletonConnection.getConnexion();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders o WHERE o.IsValid=1 group by o.orderNumber");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order(rs.getInt("Id"),
+                        rs.getDate("Date").toLocalDate(),rs.getInt("OrderNumber"),
+                        rs.getInt("SalesPersonId"),rs.getInt("IsValid"));
+
+                Order.add(order);
+                System.out.println(order);
+                System.out.println("--------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Order;
+    }
+
+    @Override
+    public List<Order> getAllcancelledOrdersAdmin() {
+        List<Order> Order = new ArrayList<>();
+        Connection connection = SingletonConnection.getConnexion();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM orders o WHERE o.IsValid=0 group by o.orderNumber");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -155,7 +178,7 @@ public class OrderRepository implements IOrderRepository {
             while (rs.next()) {
                 OrderDetails order = new OrderDetails(rs.getInt("OrderId"),
                         rs.getString("t.Name"),
-                      rs.getInt("Quantity"),
+                        rs.getInt("Quantity"),
                         rs.getDouble("t.price"),rs.getInt("orderNumber"),
                         rs.getDate("o.Date").toLocalDate());
 
@@ -185,5 +208,21 @@ public class OrderRepository implements IOrderRepository {
         }
 
         return nborders;    }
+
+    @Override
+    public void cancelOrder(int id) {
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE orders SET IsValid= 0 where OrderNumber= ?");
+            ps.setInt(1, id);
+
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+    }
 
 }

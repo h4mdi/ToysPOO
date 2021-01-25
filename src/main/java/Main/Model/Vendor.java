@@ -10,17 +10,19 @@ public class Vendor {
     private String email ;
     private String facebook ;
     private String address ;
+    private String phone ;
 
 
     public Vendor() {
     }
 
-    public Vendor(int id, String name, String email, String address,String facebook) {
+    public Vendor(int id, String name, String email, String address,String facebook,String phone) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.facebook = facebook;
         this.address = address;
+        this.phone = phone;
     }
 
     public int getId() {
@@ -61,6 +63,14 @@ public class Vendor {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
 

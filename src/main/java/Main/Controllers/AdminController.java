@@ -24,8 +24,6 @@ import java.util.ResourceBundle;
 
 public class AdminController implements Initializable {
 
-    @FXML private Label hello;
-
     @FXML
     private Label nbtoys ;
     @FXML

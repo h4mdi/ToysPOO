@@ -63,20 +63,6 @@ public class CashierSalesController implements Initializable {
     @FXML
     private TableColumn<Order, Integer> numordre;
 
-//
-//    @FXML
-//    private TableColumn<Toy, Integer> idP;
-//    @FXML
-//    private TableColumn<Toy, String> nomP;
-//    @FXML
-//    private TableColumn<Toy, Double> prixP;
-//
-//    @FXML
-//    private Button btn_afficherPhoto;
-//    @FXML
-//    private Button btn_addToy;
-//    @FXML
-//    private Button btn_updateToy;
     ObservableList<Order> oblist ;
 
     IToyRepository toyRepository = new ToyRepository();

@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -79,7 +80,6 @@ public class CashierController implements Initializable {
 
     IToyRepository toyRepository = new ToyRepository();
     IOrderRepository orderRepository = new OrderRepository();
-    private String absolutePathPhoto;
     Double S = 0.0;
     int orderNumber =0 ;
 
@@ -148,8 +148,6 @@ public class CashierController implements Initializable {
         nom.setCellValueFactory(new PropertyValueFactory<>("name"));
         prix.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
-//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
 
 
 
@@ -232,7 +230,7 @@ public class CashierController implements Initializable {
             stage.setScene(new Scene(p));
             stage.show();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
         }
 
     }

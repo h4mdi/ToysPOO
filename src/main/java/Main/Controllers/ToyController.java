@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -80,12 +81,6 @@ public class ToyController implements Initializable {
     @FXML
     private TableColumn<Toy, String> pa;
 
-    @FXML
-    private Button btn_afficherPhoto;
-    @FXML
-    private Button btn_addToy;
-    @FXML
-    private Button btn_updateToy;
 
     @FXML
     private TextField update_name;
@@ -111,8 +106,7 @@ public class ToyController implements Initializable {
     private TextField toyphoto;
     @FXML
     private TextField insert_name;
-    @FXML
-    private TextField insert_vendor;
+
     @FXML
     private TextField insert_price;
     @FXML
@@ -121,6 +115,8 @@ public class ToyController implements Initializable {
     private TextField photoProduit;
     @FXML
     private ComboBox<String> insert_Vendor;
+    @FXML
+    private ComboBox<String> update_Vendor;
 
     @FXML
     private ComboBox<String> insert_type1;
@@ -140,7 +136,7 @@ public class ToyController implements Initializable {
         insert_Vendor.setItems(FXCollections.observableArrayList(toyRepository.getAllVendors()));
         insert_type1.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
         update_type.setItems(FXCollections.observableArrayList(toyRepository.getAllTypes()));
-
+        update_Vendor.setItems(FXCollections.observableArrayList(toyRepository.getAllVendors()));
             }
 
 
@@ -219,7 +215,7 @@ public class ToyController implements Initializable {
             stage.setScene(new Scene(p));
             stage.show();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -236,7 +232,6 @@ public class ToyController implements Initializable {
     private void show_updateForm(ActionEvent event) {
 
         update_name.setText(tableView.getSelectionModel().getSelectedItem().getName());
-        update_vendor.setText(tableView.getSelectionModel().getSelectedItem().getVendor_name());
         update_price.setText(Double.toString(tableView.getSelectionModel().getSelectedItem().getPrice()));
         update_min.setText(Integer.toString(tableView.getSelectionModel().getSelectedItem().getMin_age()));
         update_max.setText(Integer.toString(tableView.getSelectionModel().getSelectedItem().getMax_age()));
@@ -255,6 +250,9 @@ public class ToyController implements Initializable {
     }
     @FXML
     private void save_Update(ActionEvent event) {
+        deplacerVers(update_picture, absolutePathPhoto,"C:\\Users\\hp\\IdeaProjects\\ToysPOO\\src\\main\\resources\\toysphoto");
+        deplacerVers(update_picture, absolutePathPhoto,"C:\\wamp64\\www\\toys\\photos");
+
         if (!tableView.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Modification d'un produit");
@@ -265,20 +263,19 @@ public class ToyController implements Initializable {
             if (result.get() == ButtonType.OK) {
 
                 ToyRepository toyRepository = new ToyRepository();
+                int start =update_type.getSelectionModel().getSelectedItem().lastIndexOf('[')+1;
+                int end =update_type.getSelectionModel().getSelectedItem().indexOf(']');
+
                 Toy toy = new Toy(tableView.getSelectionModel().getSelectedItem().getId(),
                         update_name.getText(),
-                        toyphoto.getText(),
-
+                        "http://localhost/toys/photos/"+update_picture.getText(),
                         Double.parseDouble(update_price.getText()),
                         Integer.parseInt(update_min.getText()),
                         Integer.parseInt(update_max.getText()),
                         Double.parseDouble(update_stock.getText()),
-                        tableView.getSelectionModel().getSelectedItem().getVendorID(),
-                        update_name.getText(),
-                        Integer.parseInt(update_max.getText()),
-                        update_name.getText());
-
-
+                        Integer.parseInt(update_type.getSelectionModel().getSelectedItem().substring(start,end)),                        update_name.getText(),
+                        Integer.parseInt(update_Vendor.getSelectionModel().getSelectedItem().substring(update_Vendor.getSelectionModel().getSelectedItem().lastIndexOf('[')+1,update_Vendor.getSelectionModel().getSelectedItem().indexOf(']'))),
+                        update_Vendor.getSelectionModel().getSelectedItem().substring(0,update_Vendor.getSelectionModel().getSelectedItem().lastIndexOf('[')-1));
 
 
                 toyRepository.update(toy);
@@ -287,7 +284,6 @@ public class ToyController implements Initializable {
             }
 
             update_name.setText("");
-            update_vendor.setText("");
             update_price.setText("");
             update_min.setText("");
             update_max.setText("");
@@ -317,6 +313,24 @@ public class ToyController implements Initializable {
 
     }
 
+    @FXML
+    private void upphotoChooser(ActionEvent event)
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File choix = fileChooser.showOpenDialog(null);
+        if (choix != null) {
+
+            absolutePathPhoto = choix.getAbsolutePath();
+            update_picture.setText(choix.getName());
+        } else {
+            System.out.println("Image introuvable");
+        }
+
+    }
 
     @FXML
     private void SaveAddToy(ActionEvent event) {
@@ -352,7 +366,6 @@ public class ToyController implements Initializable {
                 Afficher();
                 insert_name.setText("");
                 insert_price.setText("");
-                insert_vendor.setText("");
                 toyphoto.setText("");
                 insert_stock.setText("");
 
@@ -415,8 +428,6 @@ public class ToyController implements Initializable {
                 String.valueOf(cellData.getValue().getVendor_name())));        stock.setCellValueFactory(new PropertyValueFactory<>("stock"));
         pa.setCellValueFactory(cellData -> Bindings.createStringBinding(() ->
                 cellData.getValue().getMin_age() + " ans et  " + cellData.getValue().getMax_age()+" ans"));         // pa.setCellValueFactory(new PropertyValueFactory<>("max_age"));
-//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
-
 
         filteredData = new FilteredList<>(oblist, b -> true);
 
@@ -529,7 +540,6 @@ public class ToyController implements Initializable {
             System.out.println(e);
         }
     }
-
 
 
     @FXML

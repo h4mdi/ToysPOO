@@ -57,20 +57,10 @@ public class VendorController implements Initializable {
     private TableColumn<Vendor, String> email;
     @FXML
     private TableColumn<Vendor, String> facebook;
+    @FXML
+    private TableColumn<Vendor, String> phone;
 
-    @FXML
-    private Button btn_afficherPhoto;
-    @FXML
-    private Button btn_addToy;
-    @FXML
-    private Button btn_updateToy;
 
-    @FXML
-    private TextField update_name;
-    @FXML
-    private TextField update_vendor;
-    @FXML
-    private TextField update_price;
 
     @FXML
     private TextField m_f_nom;
@@ -80,13 +70,11 @@ public class VendorController implements Initializable {
     private TextField m_f_mail;
     @FXML
     private TextField m_f_fac;
-    @FXML
-    private Button PhotoUpload;
-    @FXML
-    private ComboBox<String> update_type;
 
     @FXML
-    private TextField toyphoto;
+    private TextField   m_tel ;
+
+
     @FXML
     private TextField insert_name;
     @FXML
@@ -95,16 +83,10 @@ public class VendorController implements Initializable {
     private TextField insert_adress;
     @FXML
     private TextField insert_facebook;
-    @FXML
-    private TextField photoProduit;
-    @FXML
-    private ComboBox<String> insert_Vendor;
+    private TextField insert_tel;
 
-    @FXML
-    private ComboBox<String> insert_type1;
 
-    @FXML
-    private Button btn_delVendor;
+
     ObservableList<Vendor> oblist;
 
     IVendorRepository VendorRepository = new VendorRepository();
@@ -123,9 +105,7 @@ public class VendorController implements Initializable {
         email.setCellValueFactory(new PropertyValueFactory<>("email"));
         adresse.setCellValueFactory(new PropertyValueFactory<>("address"));
         facebook.setCellValueFactory(new PropertyValueFactory<>("facebook"));
-
-        // pa.setCellValueFac tory(new PropertyValueFactory<>("max_age"));
-//        photo.setCellValueFactory(new PropertyValueFactory<>("photo"));
+        phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
 
         filteredData = new FilteredList<>(oblist, b -> true);
@@ -181,8 +161,8 @@ public class VendorController implements Initializable {
         vendor.setEmail(insert_email.getText());
         vendor.setAddress(insert_adress.getText());
         vendor.setFacebook(insert_facebook.getText());
+        vendor.setPhone(insert_tel.getText());
 
-        System.out.println(insert_facebook.getText());
 
         if (insert_name.getText().equals("") || insert_adress.getText().equals("") ||
                 insert_facebook.getText().equals("") || insert_email.getText().equals("")) {
@@ -197,6 +177,7 @@ public class VendorController implements Initializable {
                 insert_adress.setText("");
                 insert_facebook.setText("");
                 insert_email.setText("");
+                insert_tel.setText("");
 
             }
 
@@ -221,6 +202,7 @@ public class VendorController implements Initializable {
         m_f_adr.setText(tableView.getSelectionModel().getSelectedItem().getAddress());
         m_f_mail.setText(tableView.getSelectionModel().getSelectedItem().getEmail());
         m_f_fac.setText(tableView.getSelectionModel().getSelectedItem().getFacebook());
+        m_tel.setText(tableView.getSelectionModel().getSelectedItem().getPhone());
 
 
         tab.getSelectionModel().select(2);
@@ -236,6 +218,7 @@ public class VendorController implements Initializable {
         vendor.setEmail(m_f_mail.getText()); ;//type
         vendor.setAddress(m_f_adr.getText()); ;
         vendor.setFacebook(m_f_fac.getText());
+        vendor.setPhone(m_tel.getText());
 
 
 
@@ -254,6 +237,7 @@ public class VendorController implements Initializable {
                 m_f_mail.setText("");
                 m_f_adr.setText("");
                 m_f_fac.setText("");
+                m_tel.setText("");
 
 
             }

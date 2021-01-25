@@ -3,6 +3,7 @@ package Main.DAO;
 import Main.DAO.Interfaces.ImailRepository;
 import Main.Model.Mailinglist;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +29,7 @@ public class MailinglistRepository implements ImailRepository {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println("error");
+            javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
 
         }
 
@@ -50,7 +51,7 @@ public class MailinglistRepository implements ImailRepository {
                 System.out.println("--------------");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
         }
         return maillist;
     }
@@ -67,7 +68,7 @@ public class MailinglistRepository implements ImailRepository {
                 nbsubs=rs.getInt("total") ;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
         }
 
         return nbsubs;    }

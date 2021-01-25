@@ -142,14 +142,19 @@ public class ToyRepository implements IToyRepository {
 
     @Override
     public void update(Toy toy) {
-        //DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        //Date d=new Date();
-//        String req = "UPDATE  toys SET name='" + toy.getName() + "' ,price='" + toy.getPrice() +"' where id ='" + toy.getId() + "';";
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE toys SET Name=? , Price= ? where Id= ?");
+            PreparedStatement ps = connection.prepareStatement("UPDATE toys SET Name=? , Price= ?,TypeId=?,MinAge= ?, MaxAge=?,PicturePath=?," +
+                    "VendorId=?,Quantity=? where Id= ?");
             ps.setString(1,toy.getName());
             ps.setDouble(2,toy.getPrice());
-            ps.setInt(3,toy.getId());
+            ps.setInt(3,toy.getType_id());
+            ps.setInt(4,toy.getMin_age());
+            ps.setInt(5,toy.getMax_age());
+            ps.setString(6,toy.getPhoto());
+            ps.setInt(7,toy.getVendorID());
+            ps.setDouble(8,toy.getStock());
+            ps.setDouble(9,toy.getId());
+
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -205,7 +210,8 @@ public class ToyRepository implements IToyRepository {
                 Vendor vendor = new Vendor(rs.getInt("Id"),
                         rs.getString("Name")
                         ,rs.getString("Email"),rs.getString("Address")
-                        ,rs.getString("FacebookUrl")
+                        ,rs.getString("FacebookUrl"),
+                        rs.getString("phone")
                 );
 
                 Vendorlist.add(vendor.getName()+" "+"["+vendor.getId()+"]");

@@ -10,10 +10,12 @@ public interface IOrderRepository extends IRepository<Toy>
 {
     public void Cart(Order order,Toy toy);
 
-//    void AddOrderDetails(Order order, Toy toy);
-public int getLastOrderNumber() ;
+    //    void AddOrderDetails(Order order, Toy toy);
+    public int getLastOrderNumber() ;
     public List<Order> getAllOrders(int salesPersonId) ;
     public List<Order> getAllOrdersAdmin() ;
+    public List<Order> getAllcancelledOrdersAdmin() ;
     public List<OrderDetails> getOrdersByNumber(int orderNumber);
     public int GetTotalOrders() ;
-    }
+    public void cancelOrder(int id);
+}

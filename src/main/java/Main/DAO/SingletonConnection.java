@@ -1,5 +1,6 @@
 package Main.DAO;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -19,7 +20,7 @@ public class SingletonConnection {
 		}
 		catch (Exception e) {
 			System.out.println("connexion impossible");
-	                e.printStackTrace();
+			javax.swing.JOptionPane.showMessageDialog(null,"Erreur de connection","Erreur", JOptionPane.ERROR_MESSAGE);
 	}
 	}public static Connection getConnexion() {return connection;}}
 
